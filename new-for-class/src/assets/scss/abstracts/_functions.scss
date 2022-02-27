@@ -1,0 +1,33 @@
+// font-size
+@for $i from 12 through 20 {
+  .fz-#{$i} {
+    font-size: #{$i}px;
+  }
+}
+
+// font-weight
+@for $i from 1 through 9 {
+  .fw-#{$i * 100} {
+    font-weight: $i * 100;
+  }
+}
+
+// background color
+@each $key, $value in $color-array {
+  .bgc-#{$key} {
+    background-color: $value;
+  }
+}
+
+// color
+@each $key, $value in $color-array {
+  .c-#{$key} {
+    color: $value;
+  }
+}
+
+// cursour
+
+.cursor-pointer {
+  cursor: pointer;
+}
