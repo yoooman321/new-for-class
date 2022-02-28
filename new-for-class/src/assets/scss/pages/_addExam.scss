@@ -1,0 +1,101 @@
+.add-exam-page {
+  padding: $header-height + 40 40px 40px;
+
+  .add-exam-form {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+
+    .input__title {
+      margin-bottom: 5px;
+    }
+
+    .input__field {
+      font-size: 16px;
+
+      box-sizing: border-box;
+      width: 100%;
+      height: 35px;
+      padding: 0 10px;
+
+      border: 1px solid map-get($color-array, 'text-main');
+      border-radius: 5px;
+
+      &:focus-visible {
+        border: 1px solid map-get($color-array, 'main');
+        outline: initial;
+      }
+    }
+
+    .question-sets {
+      margin-top: 10px;
+    }
+  }
+
+  .add-new-question {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 35px;
+
+    transition: .3s;
+
+    border: 1px solid map-get($color-array, 'main');
+    border-radius: 5px;
+
+    &:hover {
+      background-color: map-get($color-array, 'main');
+      .add-icon {
+        filter: invert(1);
+      }
+
+      .add-text {
+        color: #fff;
+      }
+    }
+  }
+
+  .form-buttons {
+    display: flex;
+    justify-content: center;
+
+    width: 100%;
+    height: 40px;
+    margin-top: 20px;
+
+    .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      height: 40px;
+      padding: 0 20px;
+
+      transition: .3s;
+
+      border-radius: 5px;
+
+      & + .button {
+        margin-left: 20px;
+      }
+
+      &__save {
+        background-color: map-get($color-array, 'main');
+
+        &:hover {
+          background-color: #3189e2;
+        }
+      }
+
+      &__reset {
+        background-color: #ed254e;
+
+        &:hover {
+          background-color: #e74666;
+        }
+      }
+    }
+  }
+}

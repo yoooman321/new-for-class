@@ -1,5 +1,5 @@
 // font-size
-@for $i from 12 through 20 {
+@for $i from 12 through 40 {
   .fz-#{$i} {
     font-size: #{$i}px;
   }

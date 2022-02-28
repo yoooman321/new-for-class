@@ -1,0 +1,132 @@
+.question-set {
+	box-sizing: border-box;
+	width: 100%;
+	margin-bottom: 20px;
+	padding: 20px 30px;
+
+	border: 2px dashed #00a7bd;
+	border-radius: 10px;
+	.question {
+		&-part {
+			box-sizing: border-box;
+			padding-bottom: 20px;
+
+			border-bottom: 2px solid gray;
+		}
+
+		&-index {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+
+			margin-bottom: 20px;
+		}
+	}
+
+	.answer {
+		&-part {
+			padding-top: 20px;
+
+			.title {
+				margin-bottom: 20px;
+			}
+		}
+
+		&-configurations {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			.configuration {
+				width: 40%;
+			}
+		}
+
+		&-options {
+			margin-top: 20px;
+
+			.input-wrapper {
+				position: relative;
+
+				display: flex;
+				align-items: center;
+
+				width: 100%;
+				& + .input-wrapper {
+					margin-top: 10px;
+				}
+
+				.input__checkbox {
+					width: 25px;
+					height: 25px;
+
+					opacity: 0;
+					&:checked {
+						~ .real-checkmark {
+							border-color: #17497b;
+							background-color: #1976d2;
+						}
+					}
+				}
+
+				.real-checkmark {
+					position: absolute;
+					top: 50%;
+					left: 0;
+
+					width: 25px;
+					height: 25px;
+
+					transform: translateY(-50%);
+
+					border: 2px solid #484a47;
+					border-radius: 50%;
+					&::after {
+						position: absolute;
+						top: 5px;
+						left: 9px;
+
+						width: 5px;
+						height: 10px;
+
+						content: '';
+						transform: rotate(45deg);
+
+						border: solid white;
+						border-width: 0 3px 3px 0;
+					}
+
+					&:hover {
+						border-color: #17497b;
+						background-color: #1976d2;
+					}
+				}
+
+				.input__field {
+					margin: 0 20px 0 40px;
+				}
+
+				.delete-button {
+					display: flex;
+					align-items: center;
+					flex-shrink: 0;
+					justify-content: center;
+
+					width: 40px;
+					height: 40px;
+
+					transition: 0.3s;
+
+					border-radius: 50%;
+					background-color: #484a47;
+					img {
+						width: 20px;
+					}
+
+					&:hover {
+						background-color: #868986;
+					}
+				}
+			}
+		}
+	}
+}

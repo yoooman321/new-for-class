@@ -5,7 +5,6 @@ import MainLayout from '@/layout/MainLayout.vue'
 import Home from '@/pages/teacher/Home.vue'
 import AddExam from '@/pages/teacher/exam/AddExam.vue'
 import OldExam from '@/pages/teacher/exam/OldExam.vue'
-import EditExam from '@/pages/teacher/exam/EditExam.vue'
 import History from '@/pages/teacher/history/History.vue'
 import HistoryDetail from '@/pages/teacher/history/HistoryDetail.vue'
 
@@ -21,7 +20,7 @@ const routes = [
 			{
 				path: '/edit/:id',
 				name: 'EditExam',
-				component: EditExam,
+				component: AddExam,
 				props: true,
 			},
 			{ path: '/history', name: 'History', component: History },
