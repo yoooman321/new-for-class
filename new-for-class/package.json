@@ -9,6 +9,7 @@
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "dependencies": {
+    "firebase": "^9.6.7",
     "pinia": "^2.0.11",
     "qrcode-vue3": "^1.4.17",
     "vee-validate": "^4.5.9",
