@@ -9,6 +9,7 @@ import AddExam from '@/pages/teacher/exam/AddExam.vue'
 import OldExam from '@/pages/teacher/exam/OldExam.vue'
 import History from '@/pages/teacher/history/History.vue'
 import HistoryDetail from '@/pages/teacher/history/HistoryDetail.vue'
+import Login from '@/pages/teacher/Login.vue'
 
 const routes = [
 	{
@@ -44,6 +45,11 @@ const routes = [
 		path: '/play/:id',
 		component: StudentLayout,
 		name: 'PlayGame',
+	},
+	{
+		path: '/login',
+		component: Login,
+		name: 'Login',
 	}
 ]
 
