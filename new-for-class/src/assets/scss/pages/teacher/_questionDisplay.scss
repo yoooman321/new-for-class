@@ -1,0 +1,60 @@
+.question-display {
+  position: relative;
+
+  width: 100vw;
+  height: 100vh;
+
+  background-image: url('@/assets/images/teacher/exam/bg.png');
+  background-position: center;
+  background-size: cover;
+
+  .question-part {
+    position: absolute;
+    top: 10%;
+    left: 100%;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0 20px 40px;
+
+    animation: slideIn 2s forwards;
+    text-align: center;
+
+    .question-index {
+      padding-bottom: 20px;
+    }
+
+    .counter-part {
+      font-size: 2em;
+      display: inline-block;
+
+      margin-top: 80px;
+      animation: rotate 1s linear 2s 4;
+    }
+  }
+
+
+
+  @keyframes slideIn {
+    0% {
+      left: 100%;
+    }
+    80% {
+      left: -10%;
+    }
+    100% {
+      left: 0;
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}

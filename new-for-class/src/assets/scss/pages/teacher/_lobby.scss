@@ -1,0 +1,103 @@
+.lobby-page {
+	display: flex;
+	flex-direction: column;
+
+	height: 100vh;
+
+	.lobby {
+		&__header {
+			position: sticky;
+			top: 0;
+
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			box-sizing: border-box;
+			width: 100%;
+			padding: 20px;
+
+			text-align: center;
+
+			background-color: #6f73d2;
+
+			.qrcode {
+				margin-left: 10px;
+				img {
+					height: 20vh;
+				}
+			}
+		}
+
+		&__information {
+			flex-grow: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		&__button {
+			background-color: #EB8258;
+			padding: 10px;
+			border-radius: 5px;
+			box-shadow: 1px 1px 5px #c1643f;
+
+		}
+
+		&__content {
+			flex-grow: 1;
+
+			padding: 20px;
+
+			background-color: #83c9f4;
+
+			.title-part {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+
+				.amount {
+					display: flex;
+					align-items: center;
+
+					height: 5vh;
+					padding: 0 20px;
+
+					border-radius: 10px;
+					background-color: #aaa;
+
+					.icon {
+						height: 4vh;
+						margin-right: 5px;
+					}
+				}
+			}
+
+			.player-list {
+				display: flex;
+				flex-wrap: wrap;
+
+				.player {
+					padding: 10px;
+				}
+			}
+		}
+	}
+}
+
+.lobby__popup {
+	position: fixed;
+	z-index: 3;
+	top: 0;
+	left: 0;
+
+	width: 100vw;
+	height: 100vh;
+
+	background-color: rgba(0, 0, 0, 0.6);
+
+	.qrcode {
+		text-align: center;
+    margin-top: 25px;
+	}
+}

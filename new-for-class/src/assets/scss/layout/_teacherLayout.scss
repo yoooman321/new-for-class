@@ -1,0 +1,11 @@
+.teacher-layout {
+  @include desktop {
+    font-size: 40px;
+  }
+
+  @include bigscreen {
+    font-size: 60px;
+  }
+  
+ 
+}

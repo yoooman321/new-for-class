@@ -11,7 +11,13 @@
 }
 
 @mixin desktop {
-  @media (max-width: $desktop) {
+  @media (min-width: $desktop) {
+      @content;
+  }
+}
+
+@mixin bigscreen {
+  @media (min-width: $bigscreen) {
       @content;
   }
 }

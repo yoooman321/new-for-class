@@ -53,6 +53,17 @@ export default {
 		QuestionSet,
 		draggable,
 	},
+// for vuex
+// 	computed: {
+//     myList: {
+//         get() {
+//             return this.$store.state.myList
+//         },
+//         set(value) {
+//             this.$store.commit('updateList', value)
+//         }
+//     }
+// }
 	setup() {
 		const test = (values) => {
 			console.log('aaa', values)

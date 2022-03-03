@@ -1,0 +1,63 @@
+<template>
+  <div class="answer-question-page">
+    <div class="answer-question__question-part">
+      Test Question Title
+    </div>
+
+    <OptionsAnswer />
+
+     <!-- <audio
+      ref="audio"
+      autoplay
+      loop
+    >
+    <source  src="@/assets/audio/bgm.mp3" type="audio/mpeg">
+    </audio> -->
+  </div>
+</template>
+
+<script>
+import {onMounted, ref} from 'vue'
+import OptionsAnswer from '@/components/teacher/game/OptionsAnswer.vue'
+import music from '@/assets/audio/bgm.mp3'
+
+export default {
+  components: {
+    OptionsAnswer,
+  },
+
+  setup() {
+    // const audio = ref(null);
+    // const aaa = ref(null);
+    // onMounted(() => {
+    //   console.log(aaa.value);
+    //   setTimeout(() => {
+
+    //     aaa.value.click();
+    //   }, 1000)
+    //   //@ts-ignore
+    // });
+
+    // const test = () => {
+    //   console.log('jjjj');
+      
+    //   audio.value.play()
+    // }
+
+    // return {
+    //   audio,test,aaa
+    // };
+  }
+}
+</script>
+
+<style lang="scss">
+.answer-question-page {
+  display: flex;
+  flex-direction: column;
+
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+</style>

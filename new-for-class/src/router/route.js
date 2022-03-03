@@ -1,5 +1,6 @@
 // layout
 import MainLayout from '@/layout/MainLayout.vue'
+import TeacherLayout from '@/layout/TeacherLayout.vue'
 
 // pages
 import Home from '@/pages/teacher/Home.vue'
@@ -32,6 +33,12 @@ const routes = [
 			},
 		],
 	},
+	{
+		path: '/start/:id',
+		component: TeacherLayout,
+		name: 'StartGame',
+		meta: { requiresAuth: true },
+	}
 ]
 
 export default routes
