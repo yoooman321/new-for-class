@@ -1,5 +1,5 @@
 <template>
-	<div class="lobby-page">
+	<div class="teacher-lobby-page">
 		<div class="lobby__header">
 			<div class="lobby__information">
 				<div class="text c-fff fw-600">請掃描QRCode進入遊戲</div>

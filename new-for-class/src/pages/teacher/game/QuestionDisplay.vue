@@ -1,5 +1,5 @@
 <template>
-	<div class="question-display">
+	<div class="teacher-question-display">
 		<div class="question-part">
 			<div class="question-index fw-600">Question 1</div>
 			<div class="question">

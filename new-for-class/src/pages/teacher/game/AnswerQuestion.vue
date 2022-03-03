@@ -1,5 +1,5 @@
 <template>
-  <div class="answer-question-page">
+  <div class="teacher-answer-question-page">
     <div class="answer-question__question-part">
       Test Question Title
     </div>
@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style lang="scss">
-.answer-question-page {
+.teacher-answer-question-page {
   display: flex;
   flex-direction: column;
 
