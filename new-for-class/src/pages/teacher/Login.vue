@@ -27,11 +27,17 @@
 
 <script>
 import { Form, Field } from 'vee-validate'
+import {getAuth} from 'firebase/auth'
+import {useRouter} from 'vue-router'
 export default {
 	components: {
 		Form,
 		Field,
 	},
+
+	setup() {
+		
+	}
 }
 </script>
 

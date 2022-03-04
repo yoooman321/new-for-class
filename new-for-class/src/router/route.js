@@ -10,6 +10,8 @@ import OldExam from '@/pages/teacher/exam/OldExam.vue'
 import History from '@/pages/teacher/history/History.vue'
 import HistoryDetail from '@/pages/teacher/history/HistoryDetail.vue'
 import Login from '@/pages/teacher/Login.vue'
+import RoomEntry from '@/pages/student/RoomEntry.vue'
+import NoExistRoom from '@/pages/student/NoExistRoom.vue'
 
 const routes = [
 	{
@@ -50,6 +52,16 @@ const routes = [
 		path: '/login',
 		component: Login,
 		name: 'Login',
+	},
+	{
+		path: '/room',
+		component: RoomEntry,
+		name: 'RoomEntry',
+	},
+	{
+		path: '/noroom',
+		component: NoExistRoom,
+		name: 'NoExistRoom',
 	}
 ]
 
