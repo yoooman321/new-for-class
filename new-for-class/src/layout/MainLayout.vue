@@ -8,11 +8,11 @@
 				<div class="navbar-list">
 					<div
 						v-for="navbar in navbarList"
+						:key="navbar.pathName"
 						:class="[
 							'navbar',
 							{ 'navbar--active': router.name === navbar.pathName },
 						]"
-						:key="navbar.pathName"
 					>
 						<router-link :to="{ name: navbar.pathName }">
 							<div class="navbar__text fz-16 c-fff">{{ navbar.title }}</div>
@@ -32,7 +32,7 @@
 									class="user-information__icon cursor-pointer"
 									src="@/assets/images/teacher/icon/logout.svg"
 								/>
-								<div class="user-information__text">登出</div>
+								<div class="user-information__text" @click="processSignOut">登出</div>
 							</li>
 						</ul>
 					</li>
@@ -67,15 +67,25 @@
 			<router-view></router-view>
 		</div>
 	</div>
+
+	<AlertMessage v-if="showErrorMessage">
+		<div>請重新再試一次</div>
+	</AlertMessage>
 </template>
 
 <script>
-import { useRoute } from 'vue-router'
+import { getAuth, signOut } from 'firebase/auth'
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import AlertMessage from '@/components/popup/AlertMessage.vue'
 
 export default {
+	components: {
+		AlertMessage,
+	},
+
 	setup() {
-		const router = useRoute()
+		const router = useRouter()
 
 		const navbarList = [
 			{
@@ -98,7 +108,31 @@ export default {
 			showSidebar.value = !showSidebar.value
 		}
 
-		return { navbarList, router, showSidebar, setShowSidebar }
+		// sign out
+		const showErrorMessage = ref(false)
+		const auth = getAuth()
+
+		const processSignOut = () => {
+			signOut(auth)
+				.then(() => {
+					router.push('/login')
+				})
+				.catch(() => {
+					showErrorMessage.value = true
+					setTimeout(() => {
+						showErrorMessage.value = false
+					}, 3000)
+				})
+		}
+
+		return {
+			navbarList,
+			router,
+			showSidebar,
+			setShowSidebar,
+			showErrorMessage,
+			processSignOut,
+		}
 	},
 }
 </script>

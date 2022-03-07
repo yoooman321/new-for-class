@@ -2,8 +2,8 @@
 .login-page {
   display: flex;
   align-items: center;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
 
   width: 100vw;
   height: 100vh;
@@ -12,11 +12,13 @@
 
   .login {
     &-container {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
       width: 80vw;
       height: 50vh;
       padding: 20px;
-
-      text-align: center;
 
       border-radius: 10px;
       background-color: rgba(255,255,255,0.8);
@@ -24,7 +26,6 @@
     }
 
     &__form {
-      width: 60%;
       margin: 0 auto;
       padding-top: 40px;
 
@@ -59,10 +60,20 @@
         }
       }
 
+      .error-message {
+        padding-top: 5px;
+
+        text-align: center;
+
+        color: #f32929;
+      }
+
       .login-button {
         width: 150px;
         margin: 40px auto 0;
         padding: 10px 0;
+
+        text-align: center;
 
         border-radius: 5px;
 
