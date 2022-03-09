@@ -1,27 +1,27 @@
 <template>
 	<div class="add-exam-page">
-		<Form class="add-exam-form c-text-main" @submit="test">
+		<Form class="add-exam-form c-text-main">
 			<div class="input-wrapper">
 				<div class="input__title fw-600 fz-18">考題名稱:</div>
 
 				<Field
+					v-model="examTitle"
 					class="input__field"
 					name="examName"
 					type="text"
-					v-model="examName"
 				/>
 			</div>
 
 			<div class="question-sets">
 				<draggable
-					:list="list"
+					:list="examData.questionList"
 					item-key="name"
 					class="list-group"
 					@start="dragging = true"
 					@end="dragging = false"
 				>
-					<template #item="{ element }">
-						<question-set :index="element.index" />
+					<template #item="{ element, index }">
+						<question-set :element="element" :index="index" />
 					</template>
 				</draggable>
 			</div>
@@ -33,7 +33,12 @@
 		</div>
 
 		<div class="form-buttons">
-			<div class="button button__save cursor-pointer c-fff">儲存</div>
+			<div
+				class="button button__save cursor-pointer c-fff"
+				@click="processSaveExamDataToFirebase"
+			>
+				儲存
+			</div>
 
 			<div class="button button__reset cursor-pointer c-fff">重置考題</div>
 		</div>
@@ -44,7 +49,10 @@
 import { Form, Field } from 'vee-validate'
 import draggable from 'vuedraggable'
 import QuestionSet from '@/components/teacher/exam/QuestionSet.vue'
-import { ref, reactive } from 'vue'
+import { ref, computed, onBeforeUnmount } from 'vue'
+import { useExamStore } from '@/stores/exam'
+import { useRouter } from 'vue-router'
+import useExamData from '@/hooks/teacher/use-exam'
 
 export default {
 	components: {
@@ -53,33 +61,71 @@ export default {
 		QuestionSet,
 		draggable,
 	},
-// for vuex
-// 	computed: {
-//     myList: {
-//         get() {
-//             return this.$store.state.myList
-//         },
-//         set(value) {
-//             this.$store.commit('updateList', value)
-//         }
-//     }
-// }
-	setup() {
-		const test = (values) => {
-			console.log('aaa', values)
-		}
 
+	props: {
+		id: {
+			type: String,
+		},
+	},
+
+	setup(props) {
+		// dragging
 		const dragging = ref(false)
 
-		const examName = ref('')
+		// hooks
+		const { saveExamDataToFirebase } = useExamData()
 
-		const list = reactive([{ index: '1' }, { index: '2' }, { index: '3' }])
+		// router
+		const router = useRouter()
 
-		const addQuestion = () => {
-			list.push({ index: '4' })
+		// store
+		const store = useExamStore()
+
+		// edit exam data
+		const setEditExamData = () => {
+			if (props.id) {
+				const examData = store.getExamDataInOldExamList(props.id)
+
+				if (!examData) {
+					router.push('/')
+					return
+				}
+				store.setTargetExamDataInExamData(examData)
+			}
 		}
 
-		return { test, examName, list, dragging, addQuestion }
+		setEditExamData()
+
+		const examTitle = computed({
+			get: () => {
+				return store.examData.examTitle
+			},
+			set: (value) => {
+				store.setExamTitle(value)
+			},
+		})
+
+		const processSaveExamDataToFirebase = async () => {
+			try {
+				const response = await saveExamDataToFirebase()
+				store.cleanExamData()
+				router.push('/old')
+			} catch (e) {
+				// DO Something - show error messgae
+			}
+		}
+
+		onBeforeUnmount(() => {
+			// DO Something - 確認要離開?
+		})
+
+		return {
+			examData: store.examData,
+			examTitle,
+			dragging,
+			addQuestion: store.addQuestion,
+			processSaveExamDataToFirebase,
+		}
 	},
 }
 </script>

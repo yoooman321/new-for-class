@@ -1,4 +1,5 @@
 <template>
+  <teleport to="body">
 	<div class="alert-message-wrapper">
 		<div class="alert-message__title">
 			<img src="@/assets/images/popup/icon/warning.svg" />
@@ -9,6 +10,7 @@
 			<slot></slot>
 		</div>
 	</div>
+  </teleport>
 </template>
 
 <style lang="scss">

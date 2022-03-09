@@ -42,6 +42,7 @@ const routes = [
 		component: TeacherLayout,
 		name: 'StartGame',
 		meta: { requiresAuth: true },
+		props: true,
 	},
 	{
 		path: '/play/:id',
