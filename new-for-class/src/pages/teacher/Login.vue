@@ -106,7 +106,10 @@ export default {
 			setPersistence(auth, browserSessionPersistence)
 				.then(() => {
 					return signInWithEmailAndPassword(auth, email.value, password.value)
-						.then(() => {
+						.then((userInfo) => {
+							const uid = userInfo.user.auth.currentUser.uid
+							localStorage.setItem('uid', uid)
+							
 							router.push('/')
 						})
 						.catch((loginError) => {

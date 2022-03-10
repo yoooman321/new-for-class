@@ -32,7 +32,9 @@
 									class="user-information__icon cursor-pointer"
 									src="@/assets/images/teacher/icon/logout.svg"
 								/>
-								<div class="user-information__text" @click="processSignOut">登出</div>
+								<div class="user-information__text" @click="processSignOut">
+									登出
+								</div>
 							</li>
 						</ul>
 					</li>
@@ -115,6 +117,7 @@ export default {
 		const processSignOut = () => {
 			signOut(auth)
 				.then(() => {
+					localStorage.removeItem('uid')
 					router.push('/login')
 				})
 				.catch(() => {
@@ -129,7 +132,6 @@ export default {
 			navbarList,
 			router,
 			showSidebar,
-			setShowSidebar,
 			showErrorMessage,
 			processSignOut,
 		}
