@@ -3,6 +3,8 @@ import {
 	getFirestore,
 	doc,
 	setDoc,
+	getDoc,
+	deleteDoc,
 } from 'firebase/firestore'
 
 export default function useTeacherGame() {
@@ -10,13 +12,66 @@ export default function useTeacherGame() {
 	const uid = localStorage.getItem('uid')
 	const store = useExamStore()
 
-	const setPageToFirebase = async (examId) => {
+	// 遊戲相關
+	const setPageToFirebase = async (examId, page) => {
+		try {
+			await setDoc(doc(db, 'rooms', examId), { page }, { merge: true })
+		} catch (e) {
+			throw new Error(e)
+		}
+	}
+
+	const setExamDataToFirebase = async (examId, examData) => {
+		const { questionList } = examData
+		try {
+			await setDoc(doc(db, 'rooms', examId), { questionList }, { merge: true })
+		} catch (e) {
+			throw new Error(e)
+		}
+	}
+
+	const setQuestionIndexToFirebase = async (examId, questionIndex) => {
+		try {
+			await setDoc(doc(db, 'rooms', examId), { questionIndex }, { merge: true })
+		} catch (e) {
+			throw new Error(e)
+		}
+	}
+
+	const getRoomsInformation = async (examId) => {
+		const roomDoc = doc(db, 'rooms', examId)
+		try {
+			const roomInformation = await getDoc(roomDoc)
+			return roomInformation.data()
+		} catch (error) {
+			throw new Error(400)
+		}
+	}
+
+	const deleteRoomsInformation = async (examId) => {
+		const roomDoc = doc(db, 'rooms', examId)
+		try {
+			const roomInformation = await deleteDoc(roomDoc)
+		} catch (error) {
+			throw new Error(400)
+		}
+	}
+
+	// 歷史相關
+	const saveHistoryToFirebase = async (examId) => {
+		const timeStamp = new Date().getTime()
+		const examData = JSON.parse(
+			JSON.stringify(store.getExamDataInOldExamList(examId))
+		)
+		const historyData = {
+			examData,
+			timeStamp,
+		}
+
 		try {
 			await setDoc(
-				doc(db, 'rooms', examId),
-				{
-					page: 'lobby',
-				},
+				doc(db, 'users', uid, 'historyList', timeStamp.toString()),
+				historyData,
 				{ merge: true }
 			)
 		} catch (e) {
@@ -24,28 +79,12 @@ export default function useTeacherGame() {
 		}
 	}
 
-	const setExamDataToFirebase = async (examId, examData) => {
-		try {
-			await setDoc(doc(db, 'rooms', examId), { examData }, { merge: true })
-		} catch (e) {
-			throw new Error(e)
-		}
+	return {
+		setPageToFirebase,
+		setExamDataToFirebase,
+		setQuestionIndexToFirebase,
+		saveHistoryToFirebase,
+		getRoomsInformation,
+		deleteRoomsInformation,
 	}
-
-	const saveHistoryToFirebase = async (examId) => {
-		const timeStamp = new Date().getTime();
-		const examData = JSON.parse(JSON.stringify(store.getExamDataInOldExamList(examId)))
-		const historyData = {
-			examData,
-			timeStamp
-		}
-		
-		try {
-			await setDoc(doc(db, 'users', uid, 'historyList', timeStamp.toString()), historyData, { merge: true })
-		} catch (e) {
-			throw new Error(e)
-		}
-	}
-
-	return { setPageToFirebase, setExamDataToFirebase, saveHistoryToFirebase }
 }

@@ -1,63 +1,67 @@
 <template>
-  <div class="teacher-answer-question-page">
-    <div class="answer-question__question-part">
-      Test Question Title
-    </div>
+	<div class="teacher-answer-question-page">
+		<div class="answer-question__question-part">{{questionTitle}}</div>
 
-    <OptionsAnswer />
+		<OptionsAnswer />
 
-     <!-- <audio
+		<!-- <audio
       ref="audio"
       autoplay
       loop
     >
     <source  src="@/assets/audio/bgm.mp3" type="audio/mpeg">
     </audio> -->
-  </div>
+	</div>
 </template>
 
 <script>
-import {onMounted, ref} from 'vue'
+import { useTeacherGameStore } from '@/stores/teacherGame'
+import { onMounted, ref } from 'vue'
 import OptionsAnswer from '@/components/teacher/game/OptionsAnswer.vue'
 import music from '@/assets/audio/bgm.mp3'
 
 export default {
-  components: {
-    OptionsAnswer,
-  },
+	components: {
+		OptionsAnswer,
+	},
 
-  setup() {
-    // const audio = ref(null);
-    // const aaa = ref(null);
-    // onMounted(() => {
-    //   console.log(aaa.value);
-    //   setTimeout(() => {
+	setup() {
+		// store
+		const { currentQuestion } = useTeacherGameStore()
 
-    //     aaa.value.click();
-    //   }, 1000)
-    //   //@ts-ignore
-    // });
+		// const audio = ref(null);
+		// const aaa = ref(null);
+		// onMounted(() => {
+		//   console.log(aaa.value);
+		//   setTimeout(() => {
 
-    // const test = () => {
-    //   console.log('jjjj');
-      
-    //   audio.value.play()
-    // }
+		//     aaa.value.click();
+		//   }, 1000)
+		//   //@ts-ignore
+		// });
 
-    // return {
-    //   audio,test,aaa
-    // };
-  }
+		// const test = () => {
+		//   console.log('jjjj');
+
+		//   audio.value.play()
+		// }
+
+		// return {
+		//   audio,test,aaa
+		// };
+
+		return { questionTitle: currentQuestion.questionTitle }
+	},
 }
 </script>
 
 <style lang="scss">
 .teacher-answer-question-page {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-  height: 100vh;
-  box-sizing: border-box;
-  overflow: hidden;
+	height: 100vh;
+	box-sizing: border-box;
+	overflow: hidden;
 }
 </style>

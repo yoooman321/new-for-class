@@ -1,5 +1,7 @@
-.teacher-teacher-question-display {
+.teacher-question-display {
   position: relative;
+
+  overflow: hidden;
 
   width: 100vw;
   height: 100vh;
@@ -28,9 +30,11 @@
 
     .counter-part {
       font-size: 2em;
+
       display: inline-block;
 
       margin-top: 80px;
+
       animation: rotate 1s linear 2s 4;
     }
   }

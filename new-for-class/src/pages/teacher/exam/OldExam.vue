@@ -59,8 +59,12 @@ export default {
 		// hook
 		const { getExamListFromFirebase, deleteExamFromFirebase, startExamGame } =
 			useExamData()
-		const { setPageToFirebase, setExamDataToFirebase, saveHistoryToFirebase } =
-			useTeacherGame()
+		const {
+			setPageToFirebase,
+			setExamDataToFirebase,
+			setQuestionIndexToFirebase,
+			saveHistoryToFirebase,
+		} = useTeacherGame()
 
 		// router
 		const router = useRouter()
@@ -92,8 +96,9 @@ export default {
 			const examData = store.getExamDataInOldExamList(examId)
 
 			const promiseList = [
-				setPageToFirebase(examId),
+				setPageToFirebase(examId, 'lobby'),
 				setExamDataToFirebase(examId, examData),
+				setQuestionIndexToFirebase(examId, -1),
 				saveHistoryToFirebase(examId),
 			]
 

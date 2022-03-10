@@ -3,23 +3,28 @@ import { defineStore } from 'pinia'
 export const useTeacherGameStore = defineStore('teacherGame', {
 	state: () => {
 		return {
-			gameExamData: {},
-			currentQuestionData: {},
+			questionList: [],
+			questionIndex: 0,
+			page: '',
+			currentQuestion: {}
 		}
 	},
 
 	actions: {
-		setGameExamData(examData) {
-			this.gameExamData = examData
+		setQuestionList(questionList) {
+			this.questionList = questionList
 		},
 
-		setCurrentQuestionData(questionIndex) {
-			const currentQuestionData = JSON.parse(
-				JSON.stringify(this.gameExamData[questionIndex])
-			)
+		setQuestionIndex(questionIndex) {
+			this.questionIndex = questionIndex
+		},
 
-			currentQuestionData.questionIndex = questionIndex
-			this.currentQuestionData = currentQuestionData
+		setPage(page) {
+			this.page = page
+		},
+
+		setCurrentQuestionInformation() {
+			this.currentQuestion = this.questionList[this.questionIndex]
 		},
 	},
 })

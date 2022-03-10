@@ -5,7 +5,7 @@
 			:color="setColor()"
 			:size="100"
 			thickness="10%"
-			colorFill="#fff"
+			color-fill="#fff"
 		>
 			<span slot="legend-value">{{ count }}</span>
 		</VeProgress>
@@ -15,25 +15,28 @@
 <script>
 import { ref, watch } from 'vue'
 import { VeProgress } from 'vue-ellipse-progress'
-import Test from '@/components/teacher/history/CorrectPercentage.vue'
+import { useTeacherGameStore } from '@/stores/teacherGame'
 import countMusic from '@/assets/audio/counted.mp3'
 export default {
 	components: {
-		Test,
 		VeProgress,
 	},
 
-	setup() {
-		const total = 10
-		let count = ref(10)
+	setup(_, context) {
+		// store
+		const { currentQuestion } = useTeacherGameStore()
+
+		const limitedTime = currentQuestion.limitedTime
+		let count = ref(limitedTime)
 		let timer = null
 		let pecent = ref(0)
 		const countdown = () => {
 			if (count.value <= 1) {
 				clearInterval(timer)
+				context.emit('processCountDownOver')
 			}
 			count.value--
-			pecent.value = ((total - count.value || 1) / total) * 100
+			pecent.value = ((limitedTime - count.value || 1) / limitedTime) * 100
 		}
 
 		timer = setInterval(countdown, 1000)

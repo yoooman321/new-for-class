@@ -34,8 +34,8 @@ export const useExamStore = defineStore('exam', {
 			if (propertyName === 'answerType') {
 				const defaultOptions = [
 					{
-						optionValue: '123',
-						isAnswer: true,
+						optionValue: '',
+						isAnswer: false,
 					},
 					{ optionValue: '', isAnswer: false },
 					{ optionValue: '', isAnswer: false },
@@ -83,7 +83,7 @@ export const useExamStore = defineStore('exam', {
 		addQuestion() {
 			const defaultQuestionData = {
 				limitedTime: 20,
-				answerType: 'single',
+				answerType: 'singleAnswer',
 				questionTitle: '',
 				options: [
 					{
