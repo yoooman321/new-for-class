@@ -8,7 +8,7 @@
 				:class="[
 					`option bgc-option-${index + 1}`,
 					{
-						'option--active': index === playerInformation.playerAnswer,
+						'option--active': index === playerAnswer,
 					},
 				]"
 				@click="chooseAnswer(index)"
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue'
+import { inject, onBeforeMount, ref } from 'vue'
 import { useStudentGameStore } from '@/stores/studentGame'
 import { storeToRefs } from 'pinia'
 
@@ -30,58 +30,75 @@ export default {
 	setup() {
 		const questionIndex = inject('questionIndex')
 
+		const playerAnswer = ref('')
+
 		const store = useStudentGameStore()
 		const { questionList, playerInformation, isSentAnswer } = storeToRefs(store)
-		const { setPlayerAnswer } = useStudentGameStore()
+		const { setPlayerAnswer, setIsSentAnswer } = useStudentGameStore()
 
 		const { options } = questionList.value[questionIndex.value]
 
-		const chooseAnswer = (playerAnswer) => {
-			setPlayerAnswer(playerAnswer)
+		const chooseAnswer = (answer) => {
+			playerAnswer.value = answer
+			setPlayerAnswer(answer)
 		}
 
-		return { playerInformation, options, isSentAnswer, chooseAnswer }
+		onBeforeMount(() => {
+			const hasAnswerThisQuestion =
+				questionIndex.value === playerInformation.value.questionIndex
+
+			if (hasAnswerThisQuestion) {
+				setIsSentAnswer(true)
+			}
+		})
+
+		return {
+			playerInformation,
+			options,
+			isSentAnswer,
+			chooseAnswer,
+			playerAnswer,
+		}
 	},
 }
 </script>
 
 <style lang="scss">
 .student-options-answer {
-  display: grid;
+	display: grid;
 
-  height: 100%;
+	height: 100%;
 
-  grid-template-columns: repeat(1, 1fr 1fr);
+	grid-template-columns: repeat(1, 1fr 1fr);
 
-  .option {
-    border: 1px solid #fff;
+	.option {
+		border: 1px solid #fff;
 
-    &--active {
-      opacity: 0.7;
-      border: 1px outset #805b0c;
-    }
-  }
+		&--active {
+			opacity: 0.7;
+			border: 1px outset #805b0c;
+		}
+	}
 }
 
 .student-loading {
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-  background-color: rgba(0, 0, 0, 0.7);
+	background-color: rgba(0, 0, 0, 0.7);
 
-  .text {
-    max-width: 200px;
+	.text {
+		max-width: 200px;
 
-    text-align: center;
-  }
+		text-align: center;
+	}
 }
-
 </style>
