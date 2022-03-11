@@ -57,7 +57,7 @@ export default {
 
 				setLobbyComponent('Tutorial')
 
-				// sent player information to firebase
+				// sent player information to firebase & vuex
 				const playerInformation = {
 					playerName: playerName.value,
 					questionIndex: -1,
@@ -66,6 +66,7 @@ export default {
 					score: 0,
 				}
 				setPlayerInformationToFirebase(examId, playerInformation)
+				setPlayerInformation(playerInformation)
 			} catch (e) {
 				// try again
 			}

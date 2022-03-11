@@ -78,6 +78,7 @@ export default {
 			setIsSentAnswer,
 			setIsCorrect,
 			setPlayerInformation,
+			setPlayerScore,
 		} = useStudentGameStore()
 
 		// 標題顯示
@@ -156,13 +157,20 @@ export default {
 		// 送答案
 		const progressSendAnswer = async () => {
 			const isCorrect = checkAnswerIsCorrect(questionIndex.value)
+
+			if (isCorrect) {
+				console.log('playerInformation.value.score', playerInformation.value.score);
+				
+				setPlayerScore(playerInformation.value.score + 1)
+			}
+
 			setIsCorrect(isCorrect)
 			const playerInformationToFirebase = {
 				playerName: playerInformation.value.playerName,
 				isCorrect,
 				questionIndex: questionIndex.value,
 				playerAnswer: playerInformation.value.playerAnswer,
-				// score:
+				score: playerInformation.value.score,
 			}
 
 			try {
