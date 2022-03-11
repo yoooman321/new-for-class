@@ -48,6 +48,7 @@ const routes = [
 		path: '/play/:id',
 		component: StudentLayout,
 		name: 'PlayGame',
+		props: true,
 	},
 	{
 		path: '/login',

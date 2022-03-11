@@ -44,15 +44,9 @@
 <script>
 import { useForm, useField } from 'vee-validate'
 import { ref } from 'vue'
-import {
-	getAuth,
-	signInWithEmailAndPassword,
-	setPersistence,
-	browserSessionPersistence,
-	onAuthStateChanged,
-} from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import AlertMessage from '@/components/popup/AlertMessage.vue'
+import useAccount from '@/hooks/use-account'
 export default {
 	components: {
 		AlertMessage,
@@ -73,7 +67,7 @@ export default {
 	setup() {
 		const router = useRouter()
 
-		const auth = getAuth()
+		const { playerSignIn } = useAccount()
 
 		// Define a validation schema
 		const simpleSchema = {
@@ -102,26 +96,18 @@ export default {
 		// login
 		const showErrorMessage = ref(false)
 
-		const processLogin = () => {
-			setPersistence(auth, browserSessionPersistence)
-				.then(() => {
-					return signInWithEmailAndPassword(auth, email.value, password.value)
-						.then((userInfo) => {
-							const uid = userInfo.user.auth.currentUser.uid
-							localStorage.setItem('uid', uid)
-							
-							router.push('/')
-						})
-						.catch((loginError) => {
-							showErrorMessage.value = true
-							setTimeout(() => {
-								showErrorMessage.value = false
-							}, 3000)
-						})
-				})
-				.catch((error) => {
-					const errorMessage = error.message
-				})
+		const processLogin = async () => {
+			try {
+				const uid = await playerSignIn(email.value, password.value)
+				localStorage.setItem('uid', uid)
+
+				router.push('/')
+			} catch {
+				showErrorMessage.value = true
+				setTimeout(() => {
+					showErrorMessage.value = false
+				}, 3000)
+			}
 		}
 
 		return {

@@ -1,21 +1,20 @@
 <template>
-  <div class="student-answer-question">
-    <OptionsAnswer />
-  </div>
+	<div class="student-answer-question">
+		<OptionsAnswer />
+	</div>
 </template>
 
 <script>
-import OptionsAnswer  from '@/components/student/game/OptionsAnswer.vue'
+import OptionsAnswer from '@/components/student/game/OptionsAnswer.vue'
 export default {
-  components: {
-    OptionsAnswer
-  }
+	components: {
+		OptionsAnswer,
+	},
 }
 </script>
 
 <style lang="scss">
 .student-answer-question {
-  height: 100%;
+	height: 100%;
 }
-
 </style>
