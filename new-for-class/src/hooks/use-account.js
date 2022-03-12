@@ -5,6 +5,7 @@ import {
 	browserSessionPersistence,
 	setPersistence,
 	signInAnonymously,
+	signInWithEmailAndPassword,
 } from 'firebase/auth'
 
 export default function useAccount() {
@@ -31,28 +32,35 @@ export default function useAccount() {
 		})
 	}
 
-  const deletePlayerAuth = () => {
+	const deletePlayerAuth = () => {
 		const auth = getAuth()
 		const user = auth.currentUser
-    
-    deleteUser(user).then(() => {
-      // User deleted.
-    }).catch((error) => {
-      console.log('eee', error);
-      
-      // An error ocurred
-      // ...
-    });
-    
-  }
+
+		deleteUser(user)
+			.then(() => {
+				// User deleted.
+			})
+			.catch((error) => {
+				console.log('eee', error)
+
+				// An error ocurred
+				// ...
+			})
+	}
 
 	const teacherSignIn = async (email, password) => {
 		const auth = getAuth()
-
-		await setPersistence(auth, browserSessionPersistence)
-		const userInfo = await signInWithEmailAndPassword(auth, email, password)
-
-		return userInfo.user.auth.currentUser.uid
+		try {
+			await setPersistence(auth, browserSessionPersistence)
+			try {
+				const userInfo = await signInWithEmailAndPassword(auth, email, password)
+				return userInfo.user.auth.currentUser.uid
+			} catch (l) {
+				return new Error(400)
+			}
+		} catch (e) {
+			return new Error(400)
+		}
 	}
 
 	return { playerSignIn, playerSignOut, deletePlayerAuth, teacherSignIn }

@@ -67,7 +67,7 @@ export default {
 	setup() {
 		const router = useRouter()
 
-		const { playerSignIn } = useAccount()
+		const { teacherSignIn } = useAccount()
 
 		// Define a validation schema
 		const simpleSchema = {
@@ -98,7 +98,7 @@ export default {
 
 		const processLogin = async () => {
 			try {
-				const uid = await playerSignIn(email.value, password.value)
+				const uid = await teacherSignIn(email.value, password.value)
 				localStorage.setItem('uid', uid)
 
 				router.push('/')
