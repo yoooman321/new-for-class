@@ -1,6 +1,6 @@
 <template>
-	<VeProgress :progress="50" :size="100" thickness="10%" colorFill="#fff">
-		<span slot="legend-value">50%</span>
+	<VeProgress :progress="percent" :size="100" thickness="10%" color-fill="#fff">
+		<span slot="legend-value">{{percent}}%</span>
 	</VeProgress>
 </template>
 
@@ -10,5 +10,17 @@ export default {
 	components: {
 		VeProgress,
 	},
+
+	props: {
+		percent: {
+			type: Number,
+		}
+	},
+
+	setup(props) {
+		const { percent } = props
+
+		return { percent }
+	}
 }
 </script>
