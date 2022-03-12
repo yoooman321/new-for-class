@@ -2,13 +2,15 @@
 	.brief-information {
 		display: flex;
 
-    .card {
-      & + .card {
-        margin-left: 10px;
-      }
-    }
+		.card {
+			& + .card {
+				margin-left: 10px;
+			}
+		}
 	}
 	.card {
+		box-sizing: border-box;
+		width: 33%;
 		margin: 10px 0;
 		padding: 20px;
 
@@ -31,13 +33,78 @@
 			padding-top: 10px;
 
 			text-align: center;
+
+			.unit {
+				padding-left: 5px;
+			}
 		}
 
-		&--correct-percentage,
-		&--student-amount,
-		&--question-amount {
-			box-sizing: border-box;
-			width: 33%;
+		&--correct-percentage {
+			.card__title {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				.help {
+					position: relative;
+
+					padding-left: 5px;
+					img {
+						height: 24px;
+					}
+
+					.instruction {
+						font-weight: initial;
+
+						position: absolute;
+						z-index: 1;
+						top: 32px;
+						left: 50%;
+
+						display: none;
+
+						box-sizing: border-box;
+						width: 150px;
+						padding: 10px;
+
+						transform: translateX(-50%);
+						text-align: left;
+
+						border: 1px solid rgba(0, 0, 0, 0.5);
+						border-radius: 10px;
+						background-color: #fff;
+
+						&::before,
+						&::after {
+							position: absolute;
+							top: 0;
+							left: 50%;
+
+							width: 0;
+							height: 0;
+
+							content: '';
+							transform: translate(-50%, -100%);
+
+							border-right: 10px solid transparent;
+							border-bottom: 10px solid rgba(0, 0, 0, 0.5);
+							border-left: 10px solid transparent;
+						}
+
+						&::after {
+							top: 1px;
+
+							border-bottom-color: #fff;
+						}
+					}
+
+					&:hover {
+						.instruction {
+							display: block;
+						}
+					}
+				}
+			}
 		}
 
 		&--unfinish-student {

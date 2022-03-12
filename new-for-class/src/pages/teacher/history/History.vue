@@ -13,16 +13,26 @@
 			</tr>
 
 			<tr
-				:key="exam.examName"
-				v-for="exam in examList"
+				v-for="(history, index) in historyList"
+				:key="history.timeStamp"
 				class="table__content-tr"
 			>
-				<td class="table__content">{{ exam.examName }}</td>
-				<td class="table__content">{{ exam.time }}</td>
-				<td class="table__content">{{ exam.remark }}</td>
+				<td class="table__content">{{ history.examData.examTitle }}</td>
+				<td class="table__content">{{ timestampToDate(history.timeStamp) }}</td>
+				<td class="table__content">{{ history.remark }}</td>
 				<td class="table__content table__buttons">
-					<div class="table__button table__button--edit">查看</div>
-					<div class="table__button table__button--delete">刪除</div>
+					<div
+						class="table__button table__button--edit"
+						@click="processGoToHistoryDetailPage(history)"
+					>
+						查看
+					</div>
+					<div
+						class="table__button table__button--delete"
+						@click="processDeleteHistoryItem(history, index)"
+					>
+						刪除
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -30,15 +40,55 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import useHistory from '@/hooks/teacher/use-history'
+import { onBeforeMount, ref } from 'vue'
+import { useHistoryStore } from '@/stores/history'
+import { useRouter } from 'vue-router'
+
 export default {
 	setup() {
-		const examList = reactive([
-			{ examName: 'test1', time: '2022-02-28' },
-			{ examName: 'test2', time: '2022-02-27' },
-		])
+		// hook
+		const {
+			getHistoryListFromFirebase,
+			deleteHistoryItemFromFirebase,
+			timestampToDate,
+		} = useHistory()
 
-		return { examList }
+		// store
+		const { setCurrentHistoryData } = useHistoryStore()
+
+		// router
+		const router = useRouter()
+
+		let historyList = ref([])
+
+		onBeforeMount(async () => {
+			historyList.value = await getHistoryListFromFirebase()
+		})
+
+		const processGoToHistoryDetailPage = (historyData) => {
+			setCurrentHistoryData(historyData)
+			router.push('/history/' + historyData.timeStamp)
+		}
+
+		const processDeleteHistoryItem = async ({ timeStamp }, historyIndex) => {
+			// 確認要不要刪的視窗
+			try {
+				await deleteHistoryItemFromFirebase(timeStamp)
+				historyList.value.splice(historyIndex, 1)
+
+				// 刪除成功
+			} catch (e) {
+				// do something
+			}
+		}
+
+		return {
+			historyList,
+			timestampToDate,
+			processDeleteHistoryItem,
+			processGoToHistoryDetailPage,
+		}
 	},
 }
 </script>

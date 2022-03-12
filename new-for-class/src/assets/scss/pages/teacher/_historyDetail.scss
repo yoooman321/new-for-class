@@ -1,56 +1,118 @@
 .history-detail {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: $header-height + 40 40px 40px;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: $header-height + 40 40px 40px;
 
-  &__title {
-    display: flex;
-    align-items: stretch;
-    justify-content: flex-start;
+	a {
+		text-decoration: none;
+	}
 
-    .title-card {
-      padding: 10px 20px;
+	&__return {
+		display: inline-flex;
+		align-items: center;
 
-      text-align: center;
+		margin-bottom: 20px;
+		padding: 10px;
 
-      border: 1px solid #aaa;
-      border-radius: 10px;
+		img {
+			height: 24px;
+		}
+	}
 
-      & + .title-card {
-        margin-left: 25px;
-      }
+	&__title {
+		display: flex;
+		align-items: stretch;
+		justify-content: flex-start;
 
-      .text {
-        margin-bottom: 10px;
-      }
-    }
-  }
+		.title-card {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
 
-  &__tabs {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-top: 30px;
-    padding-bottom: 10px;
+			box-sizing: border-box;
+			min-width: 200px;
+			min-height: 100px;
+			padding: 0 20px;
 
-    border-bottom: 1px solid #aaa;
-  }
+			text-align: center;
 
-  &__tab {
-    width: 33%;
+			border: 1px solid #aaa;
+			border-radius: 10px;
 
-    transition: 0.3s;
-    text-align: center;
+			& + .title-card {
+				margin-left: 25px;
+			}
 
-    &:hover {
-      font-weight: bold;
+			.text {
+				margin-bottom: 10px;
+			}
 
-      color: #1976d2;
-    }
-  }
+			.remark {
+				&-title {
+					display: flex;
+					align-items: center;
+					justify-content: center;
 
-  
-  &__content {
-   padding-top: 20px; 
-  }
+					margin-bottom: 10px;
+
+					.text {
+						margin: initial;
+					}
+
+					img {
+						height: 20px;
+					}
+				}
+			}
+		}
+	}
+
+	&__tabs {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		padding-top: 30px;
+		padding-bottom: 10px;
+
+		border-bottom: 1px solid #aaa;
+	}
+
+	&__tab {
+		position: relative;
+
+		width: 33%;
+		padding-bottom: 10px;
+
+		transition: color 0.3s;
+		text-align: center;
+
+		&:hover,
+		&.active {
+			color: #1976d2;
+
+			&::before {
+				transform: translateX(-50%) scaleX(1);
+			}
+		}
+
+		&::before {
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+
+			width: 50%;
+			height: 2px;
+
+			content: '';
+			transition: transform 0.3s;
+			transform: translateX(-50%) scaleX(0);
+
+			background-color: #1976d2;
+		}
+	}
+
+	&__content {
+		padding-top: 20px;
+	}
 }
