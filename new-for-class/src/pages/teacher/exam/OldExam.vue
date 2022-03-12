@@ -63,7 +63,7 @@ export default {
 			setPageToFirebase,
 			setExamDataToFirebase,
 			setQuestionIndexToFirebase,
-			saveHistoryToFirebase,
+			addHistoryToFirebase,
 		} = useTeacherGame()
 
 		// router
@@ -94,12 +94,14 @@ export default {
 		// 開始遊戲
 		const processStartExamGame = async (examId) => {
 			const examData = store.getExamDataInOldExamList(examId)
+			const timeStamp = new Date().getTime()
+			examData.historyID = timeStamp
 
 			const promiseList = [
 				setPageToFirebase(examId, 'lobby'),
 				setExamDataToFirebase(examId, examData),
 				setQuestionIndexToFirebase(examId, -1),
-				saveHistoryToFirebase(examId),
+				addHistoryToFirebase(examId, timeStamp, examData),
 			]
 
 			try {

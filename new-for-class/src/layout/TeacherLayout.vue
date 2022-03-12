@@ -13,7 +13,14 @@ import Finish from '@/pages/teacher/game/Finish.vue'
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 import { useTeacherGameStore } from '@/stores/teacherGame'
 import { storeToRefs } from 'pinia'
-import { onBeforeMount, provide } from 'vue'
+import { onBeforeMount, provide, reactive, watch } from 'vue'
+import {
+	getFirestore,
+	collection,
+	query,
+	where,
+	onSnapshot,
+} from 'firebase/firestore'
 
 export default {
 	components: {
@@ -30,35 +37,72 @@ export default {
 	},
 
 	setup(props) {
-		
 		const { id: examId } = props
+		let playerList = reactive([])
+		let playerListener = null
 
 		provide('examId', examId)
-		// 還要provide playerlist
 
 		// store
 		const store = useTeacherGameStore()
-		const { page } = storeToRefs(store)
-		const { setQuestionList, setQuestionIndex, setPage } = useTeacherGameStore()
+		const { page, questionIndex } = storeToRefs(store)
+		const {
+			setQuestionList,
+			setQuestionIndex,
+			setPage,
+			setPlayerList,
+			setHistoryID,
+		} = useTeacherGameStore()
 
 		// hooks
 		const { getRoomsInformation } = useTeacherGame()
 
-		// TODO: watch vuex裡的QuestionIndex, 有變動就移除監聽, -> 清空playerlist建立新的監聽
-		onBeforeMount(async () => {
-			// 分兩個function, 1個取資料,另外一個監聽player, 監聽QuestionIndex
-			try {
-				// 取得資料庫資料後存入vuex
-				const { page, questionIndex, questionList } = await getRoomsInformation(
-					examId
-				)
+		// 取得資料庫資料後存入vuex
+		const processGetRoomsInformation = async () => {
+			const { page, questionIndex, questionList, historyID } = await getRoomsInformation(
+				examId
+			)
 
-				setPage(page)
-				setQuestionIndex(questionIndex)
-				setQuestionList(questionList)
+			setPage(page)
+			setQuestionIndex(questionIndex)
+			setQuestionList(questionList)
+			setHistoryID(historyID)
+		}
+
+		watch(questionIndex, async() => {
+			playerListener()
+			setPlayerList([])
+
+			addListenerObject()
+		})
+
+		const addListenerObject = () => {
+			const db = getFirestore()
+
+			const q = query(
+				collection(db, 'rooms', examId, 'players'),
+				where('questionIndex', '==', questionIndex.value)
+			)
+			playerListener = onSnapshot(q, (querySnapshot) => {
+				let originalPlayerList = []
+				querySnapshot.forEach((doc) => {
+					originalPlayerList.push(doc.data())
+				})
+				playerList = [...new Set(originalPlayerList)]
+
+				setPlayerList(playerList)
+			})
+		}
+
+		onBeforeMount(async () => {
+			try {
+				processGetRoomsInformation()
 			} catch (e) {
 				console.log('ee', e)
 			}
+
+			// 監聽player
+			addListenerObject()
 		})
 
 		return { teacherPage: page }

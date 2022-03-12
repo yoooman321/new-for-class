@@ -2,21 +2,21 @@
 	<div class="statistics">
 		<div class="statistics-inner">
 			<div
+				v-for="(answerAmount, optionIndex, index) in statisitcsData"
+				:key="`${optionIndex}-graphic`"
 				class="statistics__option-list"
-				v-for="(option, index) in optionList"
-				:key="`${option}-graphic`"
 			>
 				<div class="statistics__graphic-list">
-					<div class="statistics__amount">{{ testObj[option] }}</div>
+					<div class="statistics__amount">{{ answerAmount }}</div>
 					<div
 						:class="`graphic bgc-option-${index + 1}`"
 						:style="{
-							height: `${(testObj[option] / totalOptionAmount) * 100}%`,
+							height: `${(answerAmount / totalAnswerAmount) * 100}%`,
 						}"
 					></div>
 				</div>
 				<div class="statistics__title-list">
-					<div class="title">{{ option }}</div>
+					<div class="title">{{ optionTitleList[index] }}</div>
 				</div>
 			</div>
 		</div>
@@ -24,126 +24,37 @@
 </template>
 
 <script>
+import { storeToRefs } from 'pinia'
+import { useTeacherGameStore } from '@/stores/teacherGame'
+
 export default {
 	setup() {
-		const optionList = ['A', 'B', 'C', 'D']
-		const testData = [
-			'A',
-			'B',
-			'B',
-			'C',
-			'D',
-			'A',
-			'B',
-			'C',
-			'D',
-			'A',
-			'B',
-			'B',
-			'C',
-			'D',
-			'A',
-			'B',
-			'C',
-			'D',
-			'A',
-			'B',
-			'B',
-			'C',
-			'D',
-			'A',
-			'B',
-			'C',
-			'D',
-			'A',
-			'B',
-			'B',
-			'C',
-			'D',
-			'A',
-			'B',
-			'C',
-			'D',
-			'A',
-			'B',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'B',
-			'B',
-			'D',
-			'A',
-			'B',
-			'C',
-			'D',
-		]
+		// store
+		const store = useTeacherGameStore()
+		const { currentQuestion } = useTeacherGameStore()
+		const { playerList } = storeToRefs(store)
+		const { options } = currentQuestion
 
-		const getAmountByOption = (option) => {
-			const optionList = testData.filter((data) => option === data)
-			return optionList.length
+		const optionTitleList = ['A', 'B', 'C', 'D']
+
+		const answerList = playerList.value.map(({ playerAnswer }) => {
+			return playerAnswer
+		})
+
+		const statisitcsData = {}
+
+		options.forEach((_, index) => {
+			const answerListMatchIndex = answerList.filter(
+				(answer) => answer === index
+			)
+			statisitcsData[index] = answerListMatchIndex.length
+		})
+
+		return {
+			statisitcsData,
+			totalAnswerAmount: answerList.length,
+			optionTitleList,
 		}
-
-		let testObj = {
-			A: getAmountByOption('A'),
-			B: getAmountByOption('B'),
-			C: getAmountByOption('C'),
-			D: getAmountByOption('D'),
-		}
-
-		console.log('aa', testObj)
-
-		return { testObj, totalOptionAmount: testData.length, optionList }
 	},
 }
 </script>

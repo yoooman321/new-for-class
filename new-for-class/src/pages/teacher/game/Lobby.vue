@@ -23,11 +23,17 @@
 				<div class="title fz-26">玩家列表</div>
 				<div class="amount">
 					<img class="icon" src="@/assets/images/teacher/icon/user.svg" />
-					<div class="text fz-26 c-fff fw-600">1</div>
+					<div class="text fz-26 c-fff fw-600">{{ playerList.length }}</div>
 				</div>
 			</div>
 			<div class="player-list fz-26">
-				<div class="player">test</div>
+				<div
+					:key="player.playerName"
+					v-for="player in playerList"
+					class="player"
+				>
+					{{ player.playerName }}
+				</div>
 			</div>
 		</div>
 	</div>
@@ -46,7 +52,8 @@
 import QRCodeVue3 from 'qrcode-vue3'
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 import { useTeacherGameStore } from '@/stores/teacherGame'
-import { inject } from 'vue'
+import { inject, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 
 export default {
 	components: {
@@ -55,11 +62,13 @@ export default {
 
 	setup() {
 		// store
+		const store = useTeacherGameStore()
 		const { setQuestionIndex, setPage, setCurrentQuestionInformation } =
 			useTeacherGameStore()
+		const { playerList } = storeToRefs(store)
 
 		// hooks
-		const { setPageToFirebase } = useTeacherGame()
+		const { setPageToFirebase, setHistoryDataToFirebase } = useTeacherGame()
 
 		// inject examId
 		const examId = inject('examId')
@@ -78,11 +87,15 @@ export default {
 		 * 4. set History player Amount
 		 */
 		const progressPlayGame = async () => {
+			const historyData = {
+				playerAmount: playerList.value.length,
+			}
+
 			setQuestionIndex(0)
 			setCurrentQuestionInformation()
 
 			try {
-				// history player amount
+				await setHistoryDataToFirebase(historyData)
 				await setPageToFirebase(examId, 'QuestionDisplay')
 				setPage('QuestionDisplay')
 			} catch (e) {
@@ -90,7 +103,7 @@ export default {
 			}
 		}
 
-		return { pupupQrcodeSize, progressPlayGame, examId }
+		return { pupupQrcodeSize, progressPlayGame, examId, playerList }
 	},
 }
 </script>

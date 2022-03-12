@@ -4,7 +4,12 @@
 		<Timer class="timer-wrapper" @processCountDownOver="processCountDownOver" />
 		<div v-if="showStatistics" class="times-up-part">
 			<Statistics />
-			<div class="next-button fz-40 c-fff cursor-pointer" @click="processNextQuestion">下一題</div>
+			<div
+				class="next-button fz-40 c-fff cursor-pointer"
+				@click="processNextQuestion"
+			>
+				下一題
+			</div>
 		</div>
 	</div>
 
@@ -32,6 +37,7 @@ import Statistics from '@/components/teacher/game/Statistics.vue'
 
 import { ref, inject } from 'vue'
 import { useTeacherGameStore } from '@/stores/teacherGame'
+import { storeToRefs } from 'pinia'
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 
 export default {
@@ -46,59 +52,67 @@ export default {
 		const examId = inject('examId')
 
 		// store
-		const { currentQuestion, questionIndex, questionList, setQuestionIndex, setPage, setCurrentQuestionInformation } =
-			useTeacherGameStore()
+		const {
+			currentQuestion,
+			questionIndex,
+			questionList,
+			setQuestionIndex,
+			setPage,
+			setCurrentQuestionInformation,
+		} = useTeacherGameStore()
 		const { options } = currentQuestion
+		const store = useTeacherGameStore()
+		const { playerList } = storeToRefs(store)
 
 		// hooks
-		const { setPageToFirebase } = useTeacherGame()
+		const { setPageToFirebase, setHistoryDataToFirebase } = useTeacherGame()
 
 		const optionTitleList = ['A', 'B', 'C', 'D']
 		const showStatistics = ref(false)
 
-		/**
-		 * 倒數結束
-		 * 1. showStatistics = true  V
-		 * 2. vuex questionindex++  V
-		 * 3. firebase page   V
-		 * 4. history push player list
-		 */
 		const processCountDownOver = async () => {
-			setQuestionIndex(questionIndex + 1)
 			try {
 				await setPageToFirebase(examId, 'result')
 				showStatistics.value = true
+				await processSetPlayerAnswerToHistory()
+				setQuestionIndex(questionIndex + 1)
+			} catch (e) {
+				console.log('eeee', e)
+			}
+		}
+
+		const processSetPlayerAnswerToHistory = async () => {
+			const historyData = {
+				[`question${questionIndex}`]: playerList.value,
+			}
+
+			await setHistoryDataToFirebase(historyData)
+		}
+
+		const processNextQuestion = async () => {
+			if (questionIndex !== questionList.length - 1) {
+				try {
+					setCurrentQuestionInformation()
+					await setPageToFirebase(examId, 'QuestionDisplay')
+					setPage('QuestionDisplay')
+				} catch {}
+
+				return
+			}
+
+			try {
+				await setPageToFirebase(examId, 'Finish')
+				setPage('Finish')
 			} catch {}
 		}
 
-		/**
-		 * 按下一題:
-		 * 1. 判斷vuex questionIndex === list.length V
-		 * 2. same -> vuex, firebase page = finish V
-		 *    diff -> page = qd V, setExam
-		 */
-    const processNextQuestion = async () => {
-      if (questionIndex !== questionList.length - 1) {
-        try {
-          setCurrentQuestionInformation()
-          await setPageToFirebase(examId, 'QuestionDisplay')
-				  setPage('QuestionDisplay')
-        } catch {
-
-        }
-        
-        return 
-      }
-
-      try {
-          await setPageToFirebase(examId, 'Finish')
-				  setPage('Finish')
-        } catch {
-
-        }
-    }
-
-		return { optionTitleList, showStatistics, options, processCountDownOver , processNextQuestion}
+		return {
+			optionTitleList,
+			showStatistics,
+			options,
+			processCountDownOver,
+			processNextQuestion,
+		}
 	},
 }
 </script>

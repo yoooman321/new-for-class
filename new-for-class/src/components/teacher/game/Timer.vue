@@ -1,7 +1,7 @@
 <template>
 	<div class="timer">
 		<VeProgress
-			:progress="pecent"
+			:progress="percent"
 			:color="setColor()"
 			:size="100"
 			thickness="10%"
@@ -29,14 +29,14 @@ export default {
 		const limitedTime = currentQuestion.limitedTime
 		let count = ref(limitedTime)
 		let timer = null
-		let pecent = ref(0)
+		let percent = ref(0)
 		const countdown = () => {
 			if (count.value <= 1) {
 				clearInterval(timer)
 				context.emit('processCountDownOver')
 			}
 			count.value--
-			pecent.value = ((limitedTime - count.value || 1) / limitedTime) * 100
+			percent.value = ((limitedTime - count.value || 1) / limitedTime) * 100
 		}
 
 		timer = setInterval(countdown, 1000)
@@ -58,7 +58,7 @@ export default {
 		// 	/* ... */
 		// })
 
-		return { pecent, count, setColor }
+		return { percent, count, setColor }
 	},
 }
 </script>

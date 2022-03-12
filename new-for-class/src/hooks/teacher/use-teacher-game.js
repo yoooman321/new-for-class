@@ -1,4 +1,5 @@
 import { useExamStore } from '@/stores/exam'
+import { useTeacherGameStore } from '@/stores/teacherGame'
 import {
 	getFirestore,
 	doc,
@@ -22,9 +23,13 @@ export default function useTeacherGame() {
 	}
 
 	const setExamDataToFirebase = async (examId, examData) => {
-		const { questionList } = examData
+		const { questionList, historyID } = examData
 		try {
-			await setDoc(doc(db, 'rooms', examId), { questionList }, { merge: true })
+			await setDoc(
+				doc(db, 'rooms', examId),
+				{ questionList, historyID },
+				{ merge: true }
+			)
 		} catch (e) {
 			throw new Error(e)
 		}
@@ -58,8 +63,7 @@ export default function useTeacherGame() {
 	}
 
 	// 歷史相關
-	const saveHistoryToFirebase = async (examId) => {
-		const timeStamp = new Date().getTime()
+	const addHistoryToFirebase = async (examId, timeStamp) => {
 		const examData = JSON.parse(
 			JSON.stringify(store.getExamDataInOldExamList(examId))
 		)
@@ -79,12 +83,24 @@ export default function useTeacherGame() {
 		}
 	}
 
+	const setHistoryDataToFirebase = async (historyData) => {
+		const { historyID } = useTeacherGameStore()
+		const historyDoc = doc(db, 'users', uid, 'historyList', historyID.toString())
+
+		try {
+			await setDoc(historyDoc, historyData, { merge: true })
+		} catch (e) {
+			throw new Error(e)
+		}
+	}
+
 	return {
 		setPageToFirebase,
 		setExamDataToFirebase,
 		setQuestionIndexToFirebase,
-		saveHistoryToFirebase,
+		addHistoryToFirebase,
 		getRoomsInformation,
 		deleteRoomsInformation,
+		setHistoryDataToFirebase,
 	}
 }

@@ -4,9 +4,11 @@ export const useTeacherGameStore = defineStore('teacherGame', {
 	state: () => {
 		return {
 			questionList: [],
-			questionIndex: 0,
+			questionIndex: -1,
 			page: '',
-			currentQuestion: {}
+			currentQuestion: {},
+			playerList: [],
+			historyID: ''
 		}
 	},
 
@@ -26,5 +28,13 @@ export const useTeacherGameStore = defineStore('teacherGame', {
 		setCurrentQuestionInformation() {
 			this.currentQuestion = this.questionList[this.questionIndex]
 		},
+
+		setPlayerList(playerList) {
+			this.playerList = playerList;
+		},
+
+		setHistoryID(historyID) {
+			this.historyID = historyID
+		}
 	},
 })
