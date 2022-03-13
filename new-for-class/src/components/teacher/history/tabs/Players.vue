@@ -2,64 +2,108 @@
 	<div class="history-players">
 		<table class="history-players-table">
 			<tr class="table__title-tr">
-				<th class="table__title">學生名稱</th>
-				<th class="table__title">答對率</th>
-				<th class="table__title">未答題數</th>
-				<th class="table__title">分數</th>
+				<th class="table__title c-fff bgc-main">學生名稱</th>
+				<th class="table__title c-fff bgc-main">答對率</th>
+				<th class="table__title c-fff bgc-main">未答題數</th>
+				<th class="table__title c-fff bgc-main">分數</th>
 			</tr>
 
 			<tr
-				:key="player.playerName"
-				v-for="player in testData"
+				v-for="(playerName, index) in Object.keys(playerList)"
+				:key="playerName"
 				class="table__content-tr cursor-pointer"
+				@click="processOpenOpenDetail(index, playerName)"
 			>
-				<td class="table__content">{{ player.playerName }}</td>
-				<td class="table__content"><CorrectPercentage /></td>
-				<td class="table__content">{{ player.unanswerCount }}</td>
-				<td class="table__content">{{ player.score }}</td>
+				<td class="table__content">{{ playerName }}</td>
+				<td class="table__content">
+					<CorrectPercentage
+						:percent="getPlayerCorrectPercentage(playerName)"
+					/>
+				</td>
+				<td class="table__content">{{ getUnAnswerAmount(playerName) }}</td>
+				<td class="table__content">{{ getPlayerScore(playerName) }}</td>
 			</tr>
 		</table>
 	</div>
 
-  <PlayerDetail />
+	<PlayerDetail v-if="openDetail" @setOpenDetail="setOpenDetail" />
 </template>
 
 <script>
 import CorrectPercentage from '@/components/teacher/history/CorrectPercentage.vue'
 import PlayerDetail from '@/components/popup/PlayerDetail.vue'
+
+import { useHistoryStore } from '@/stores/history'
+import { storeToRefs } from 'pinia'
+import { reactive, ref } from 'vue'
+
 export default {
 	components: {
 		CorrectPercentage,
-    PlayerDetail,
+		PlayerDetail,
 	},
 	setup() {
-		const testData = [
-			{
-				playerName: 'test 1',
-				correctPercentage: '50',
-				score: '5',
-				unanswerCount: '3',
-				answers: [
-					{
-						answer: 'A',
-						correct: true,
-						score: '1',
-					},
-					{
-						answer: 'B',
-						correct: false,
-						score: '0',
-					},
-				],
-			},
-		]
+		const store = useHistoryStore()
+		const { currentHistoryData } = storeToRefs(store)
+		const { setPlayerData, setSelectedPlayerIndex, setSelectedPlayerName } =
+			store
+		const { examData } = currentHistoryData.value
 
-		const questionTestData = [
-			{ questionTitle: 'Q1', type: 'single', answer: 'A' },
-			{ questionTitle: 'Q2', type: 'single', answer: 'A' },
-		]
+		const totalQuestionAmount = examData.questionList.length
 
-		return { testData, questionTestData }
+		// playerList
+		const playerList = reactive({})
+		for (let index = 0; index < totalQuestionAmount; index++) {
+			currentHistoryData.value[`question${index}`].forEach((player) => {
+				if (!playerList[player.playerName]) {
+					playerList[player.playerName] = {
+						options: [player],
+					}
+				} else {
+					playerList[player.playerName].options.push(player)
+				}
+			})
+		}
+		setPlayerData(playerList)
+
+		const getPlayerCorrectPercentage = (playerName) => {
+			const playerAnswerCorrectList = playerList[playerName].options.filter(
+				({ isCorrect }) => isCorrect
+			)
+			return (playerAnswerCorrectList.length / totalQuestionAmount) * 100
+		}
+
+		const getUnAnswerAmount = (playerName) => {
+			const answerCount = playerList[playerName].options.length
+
+			return totalQuestionAmount - answerCount
+		}
+
+		const getPlayerScore = (playerName) => {
+			const answerCount = playerList[playerName].options.length
+			return playerList[playerName].options[answerCount - 1].score
+		}
+
+		// openDetail
+		const openDetail = ref(false)
+		const setOpenDetail = (booleanData) => {
+			openDetail.value = booleanData
+		}
+		const processOpenOpenDetail = (index, playerName) => {
+			setSelectedPlayerIndex(index)
+			setSelectedPlayerName(playerName)
+			setOpenDetail(true)
+		}
+
+		return {
+			playerList,
+			openDetail,
+			getPlayerCorrectPercentage,
+			getUnAnswerAmount,
+			getPlayerScore,
+			processOpenOpenDetail,
+			setOpenDetail,
+		}
 	},
 }
 </script>

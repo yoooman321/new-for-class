@@ -8,19 +8,36 @@
 						src="@/assets/images/popup/icon/person.svg"
 					/>
 					<div class="player-name__text fw-600 fz-24">
-						{{ testData.playerName }}
+						{{ selectedPlayerName }}
 					</div>
 				</div>
 
 				<div class="pagination">
-					<div class="arrow-wrapper cursor-pointer">
+					<div
+						:class="[
+							'arrow-wrapper cursor-pointer',
+							{
+								'arrow-wrapper--disabled': selectedPlayerIndex === 0,
+							},
+						]"
+						@click="processChangePlayerData(selectedPlayerIndex - 1)"
+					>
 						<img
 							class="arrow__icon"
 							src="@/assets/images/popup/icon/left-arrow.svg"
 						/>
 					</div>
 					<div class="pages">1 of 2</div>
-					<div class="arrow-wrapper cursor-pointer">
+					<div
+						:class="[
+							'arrow-wrapper cursor-pointer',
+							{
+								'arrow-wrapper--disabled':
+									selectedPlayerIndex === totalPlayerAmount - 1,
+							},
+						]"
+						@click="processChangePlayerData(selectedPlayerIndex + 1)"
+					>
 						<img
 							class="arrow__icon"
 							src="@/assets/images/popup/icon/right-arrow.svg"
@@ -28,7 +45,7 @@
 					</div>
 				</div>
 
-				<div class="close-button cursor-pointer">
+				<div class="close-button cursor-pointer" @click="processCloseDetail">
 					<img class="close__icon" src="@/assets/images/popup/icon/close.svg" />
 				</div>
 			</div>
@@ -38,38 +55,43 @@
 					<div class="card card--correct-percentage">
 						<div class="card__title">答對率</div>
 						<div class="card__content">
-							<CorrectPercentage />
+							<CorrectPercentage :percent="getPlayerCorrectPercentage()" />
 						</div>
 					</div>
 
 					<div class="card card--correct-percentage">
 						<div class="card__title">答題數</div>
-						<div class="card__content">1 of 2</div>
+						<div class="card__content">
+							{{ playerOptions.length }} of {{ totalQuestionAmount }}
+						</div>
 					</div>
 				</div>
+
 				<div class="player__detail-table-wrapper">
 					<table class="player__detail-table">
 						<tr class="table__title-tr">
-							<th class="table__title">問題</th>
-							<th class="table__title">問題類型</th>
-							<th class="table__title">答案</th>
-							<th class="table__title">對錯</th>
+							<th class="table__title c-fff bgc-main">問題</th>
+							<th class="table__title c-fff bgc-main">問題類型</th>
+							<th class="table__title c-fff bgc-main">答案</th>
+							<th class="table__title c-fff bgc-main">對錯</th>
 						</tr>
 
 						<tr
-							:key="question.questionTitle"
-							v-for="(question, index) in questionTestData"
+							v-for="(question, index) in questionList"
+							:key="`player-table-${question.questionTitle}`"
 							class="table__content-tr"
 						>
-							<!-- TODO: 問題index要跟answer quesiontIndex一樣 -->
 							<td class="table__content">{{ question.questionTitle }}</td>
-							<td class="table__content">{{ question.type }}</td>
 							<td class="table__content">
-								{{ testData.answers[index].answer }}
+								{{ getAnswerTypeText(question.answerType) }}
 							</td>
 							<td class="table__content">
+								{{ getPlayerAnswer(index) }}
+							</td>
+
+							<td class="table__content">
 								<img
-									v-if="testData.answers[index].correct"
+									v-if="getPlayerAnswerIsCorrect(index)"
 									src="@/assets/images/popup/icon/correct.svg"
 									alt=""
 								/>
@@ -85,36 +107,103 @@
 
 <script>
 import CorrectPercentage from '@/components/teacher/history/CorrectPercentage.vue'
+
+import { useHistoryStore } from '@/stores/history'
+import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
+
 export default {
 	components: {
 		CorrectPercentage,
 	},
-	setup() {
-		const testData = {
-			playerName: 'test 1',
-			correctPercentage: '50',
-			score: '5',
-			unanswerCount: '3',
-			answers: [
-				{
-					answer: 'A',
-					correct: true,
-					score: '1',
-				},
-				{
-					answer: 'B',
-					correct: false,
-					score: '0',
-				},
-			],
+	setup(_, context) {
+		const store = useHistoryStore()
+		const { setSelectedPlayerIndex, setSelectedPlayerName } = store
+		const {
+			currentHistoryData,
+			playerData,
+			selectedPlayerIndex,
+			selectedPlayerName,
+		} = storeToRefs(store)
+		const { examData } = currentHistoryData.value
+		const totalQuestionAmount = examData.questionList.length
+		const totalPlayerAmount = Object.keys(playerData.value).length
+
+		const playerOptions = computed(() => {
+			return playerData.value[selectedPlayerName.value].options
+		})
+
+		const processCloseDetail = () => {
+			context.emit('setOpenDetail', false)
+			setSelectedPlayerIndex(0)
 		}
 
-		const questionTestData = [
-			{ questionTitle: 'Q1', type: 'single', answer: 'A' },
-			{ questionTitle: 'Q2', type: 'single', answer: 'A' },
-		]
+		const getPlayerCorrectPercentage = () => {
+			const playerAnswerCorrectList = playerOptions.value.filter(
+				({ isCorrect }) => isCorrect
+			)
+			return (playerAnswerCorrectList.length / totalQuestionAmount) * 100
+		}
 
-		return { testData, questionTestData }
+		const getAnswerTypeText = (answerType) => {
+			switch (answerType) {
+				case 'singleAnswer':
+					return '單選題'
+				case 'shortAnswer':
+					return '問答題'
+				case 'statistics':
+					return '統計題'
+
+				default:
+					return ''
+			}
+		}
+
+		const optionTitleList = ['A', 'B', 'C', 'D']
+		const getPlayerAnswer = (index) => {
+			const playerAnswer = playerOptions.value.find(
+				({ questionIndex }) => index === questionIndex
+			)
+
+			if (!playerAnswer) {
+				return '沒有作答'
+			}
+
+			return optionTitleList[playerAnswer.playerAnswer]
+		}
+
+		const getPlayerAnswerIsCorrect = (index) => {
+			const playerAnswer = playerOptions.value.find(
+				({ questionIndex }) => index === questionIndex
+			)
+
+			if (!playerAnswer) {
+				return false
+			}
+
+			return playerAnswer.isCorrect
+		}
+
+		const processChangePlayerData = (index) => {
+			setSelectedPlayerIndex(index)
+			const playerName = Object.keys(playerData.value)[index]
+			setSelectedPlayerName(playerName)
+		}
+
+		return {
+			selectedPlayerName,
+			totalQuestionAmount,
+			playerOptions,
+			questionList: examData.questionList,
+			selectedPlayerIndex,
+			totalPlayerAmount,
+			processCloseDetail,
+			getPlayerCorrectPercentage,
+			getAnswerTypeText,
+			getPlayerAnswer,
+			getPlayerAnswerIsCorrect,
+			processChangePlayerData,
+		}
 	},
 }
 </script>

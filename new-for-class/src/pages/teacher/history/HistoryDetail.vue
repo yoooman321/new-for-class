@@ -59,7 +59,6 @@
 			@changeShowEditRemark="changeShowEditRemark"
 		/>
 	</teleport>
-	/>
 </template>
 
 <script>

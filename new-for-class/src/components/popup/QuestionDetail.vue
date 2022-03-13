@@ -2,24 +2,48 @@
 	<div class="question-detail-wrapper">
 		<div class="question-detail-container">
 			<div class="question-detail__header">
+				<!-- 問題內容 -->
 				<div class="question-name">
 					<div class="question-name__text">
-						<span class="fw-600 fz-24"> Question 1:</span>
-						<span>
-							{{ questionTestData.questionTitle }}
+						<span class="fw-600 fz-24">
+							Question {{ selectedQuestionIndex + 1 }}:</span
+						>
+						<span class="question-title">
+							{{ currentQuestionData.questionTitle }}
 						</span>
 					</div>
 				</div>
 
+				<!-- 分頁 -->
 				<div class="pagination">
-					<div class="arrow-wrapper cursor-pointer">
+					<div
+						:class="[
+							'arrow-wrapper cursor-pointer',
+							{
+								'arrow-wrapper--disabled': selectedQuestionIndex === 0,
+							},
+						]"
+						@click="setSelectedQuestionIndex(selectedQuestionIndex - 1)"
+					>
 						<img
 							class="arrow__icon"
 							src="@/assets/images/popup/icon/left-arrow.svg"
 						/>
 					</div>
-					<div class="pages">1 of 2</div>
-					<div class="arrow-wrapper cursor-pointer">
+					<div class="pages">
+						{{ selectedQuestionIndex + 1 }} of
+						{{ examData.questionList.length }}
+					</div>
+					<div
+						:class="[
+							'arrow-wrapper cursor-pointer',
+							{
+								'arrow-wrapper--disabled':
+									selectedQuestionIndex === examData.questionList.length - 1,
+							},
+						]"
+						@click="setSelectedQuestionIndex(selectedQuestionIndex + 1)"
+					>
 						<img
 							class="arrow__icon"
 							src="@/assets/images/popup/icon/right-arrow.svg"
@@ -27,144 +51,107 @@
 					</div>
 				</div>
 
-				<div class="close-button cursor-pointer">
+				<!-- 關閉視窗 -->
+				<div class="close-button cursor-pointer" @click="processCloseDetail">
 					<img class="close__icon" src="@/assets/images/popup/icon/close.svg" />
 				</div>
 			</div>
 
 			<div class="question-detail__content">
+				<!-- 選項列表 -->
 				<div class="options">
-					<div class="option">
-						<div class="option__text">Option 1</div>
-						<div class="option__correct">
-							<img src="@/assets/images/popup/icon/correct.svg" alt="" />
+					<div
+						class="option"
+						v-for="(option, index) in currentQuestionData.options"
+						:key="`${currentQuestionData.questionTitle}-${index}`"
+					>
+						<div class="option__text">
+							<span
+								:class="`option__option-name fz-20 fw-600 c-option-${
+									index + 1
+								}`"
+							>
+								{{ optionTitleList[index] }}
+							</span>
+							<span class="option__option-value">
+								{{ option.optionValue }}
+							</span>
 						</div>
-            <div class="option__progress-wrapper">
-              <div class="option__progress"></div>
-            </div>
-            <div class="option__amount">1</div>
-					</div>
-					<div class="option">
-						<div class="option__text">Option 1</div>
-						<div class="option__correct">
-							<img src="@/assets/images/popup/icon/correct.svg" alt="" />
+
+						<div class="option__answer-part">
+							<div class="option__correct">
+								<img :src="optionCorrectImage(option.isAnswer)" />
+							</div>
+							<div class="option__progress-wrapper">
+								<div
+									:class="`option__progress bgc-option-${index + 1}`"
+									:style="{ width: `${getProgressWidth(index)}%` }"
+								></div>
+							</div>
+							<div class="option__amount">
+								{{ getAmountOfPlayerAnswerThisOption(index) }}
+							</div>
 						</div>
-            <div class="option__progress-wrapper">
-              <div class="option__progress"></div>
-            </div>
-            <div class="option__amount">1</div>
 					</div>
-					<div class="option">
-						<div class="option__text">Option 1</div>
-						<div class="option__correct">
-							<img src="@/assets/images/popup/icon/correct.svg" alt="" />
-						</div>
-            <div class="option__progress-wrapper">
-              <div class="option__progress"></div>
-            </div>
-            <div class="option__amount">2</div>
-					</div>
-					<div class="option">
-						<div class="option__text">Option 1</div>
-						<div class="option__correct">
-							<img src="@/assets/images/popup/icon/correct.svg" alt="" />
-						</div>
-            <div class="option__progress-wrapper">
-              <div class="option__progress"></div>
-            </div>
-            <div class="option__amount">3</div>
-					</div>
-					<div class="option">
+
+					<!-- 沒有回答 -->
+					<div class="option option--no-answer">
 						<div class="option__text">No answer</div>
-						<div class="option__correct">
-							<img src="@/assets/images/popup/icon/correct.svg" alt="" />
+						<div class="option__answer-part">
+							<div class="option__correct">
+								<img src="@/assets/images/popup/icon/error.svg" />
+							</div>
+							<div class="option__progress-wrapper">
+								<div
+									class="option__progress"
+									:style="{
+										width: `${(amountOfPlayerNoAnswer / playerAmount) * 100}%`,
+									}"
+								></div>
+							</div>
+							<div class="option__amount">
+								{{ amountOfPlayerNoAnswer }}
+							</div>
 						</div>
-            <div class="option__progress-wrapper">
-              <div class="option__progress"></div>
-            </div>
-            <div class="option__amount">4</div>
 					</div>
 				</div>
 
-        <div class="informations">
-          <div class="information">秒數限制: 20秒</div>
-          <div class="information">答對率 50%</div>
-          <div class="information">學生答題數 2 of 2</div>
-        </div>
+				<!-- 資訊欄位 -->
+				<div class="informations">
+					<div class="information">
+						秒數限制: {{ currentQuestionData.limitedTime }}秒
+					</div>
+					<div class="information">答對率 {{ questionCorrectPercentage }}%</div>
+					<div class="information">
+						學生答題數 {{ playerAnswerList.length }} of
+						{{ currentHistoryData.playerAmount }}
+					</div>
+				</div>
+
+				<!-- 學生回答表格 -->
 				<div class="question__detail-table-wrapper">
 					<table class="question__detail-table">
 						<tr class="table__title-tr">
-							<th class="table__title">學生名稱</th>
-							<th class="table__title">學生回答</th>
-							<th class="table__title">對錯</th>
+							<th class="table__title c-fff bgc-main">學生名稱</th>
+							<th class="table__title c-fff bgc-main">學生回答</th>
+							<th class="table__title c-fff bgc-main">對錯</th>
 						</tr>
 
 						<tr
 							class="table__content-tr"
+							v-for="player in playerAnswerList"
+							:key="player.playerName"
 						>
-							<td class="table__content">test2</td>
-							<td class="table__content">a1</td>
+							<td class="table__content">{{ player.playerName }}</td>
 							<td class="table__content">
-								<img
-									v-if="true"
-									src="@/assets/images/popup/icon/correct.svg"
-									alt=""
-								/>
-								<img v-else src="@/assets/images/popup/icon/error.svg" alt="" />
+								{{ optionTitleList[player.playerAnswer] }}
 							</td>
-						</tr>
-            		<tr
-							class="table__content-tr"
-						>
-							<td class="table__content">test2</td>
-							<td class="table__content">a1</td>
 							<td class="table__content">
 								<img
-									v-if="true"
+									v-if="player.isCorrect"
 									src="@/assets/images/popup/icon/correct.svg"
-									alt=""
 								/>
-								<img v-else src="@/assets/images/popup/icon/error.svg" alt="" />
-							</td>
-						</tr>
-            		<tr
-							class="table__content-tr"
-						>
-							<td class="table__content">test2</td>
-							<td class="table__content">a1</td>
-							<td class="table__content">
-								<img
-									v-if="true"
-									src="@/assets/images/popup/icon/correct.svg"
-									alt=""
-								/>
-								<img v-else src="@/assets/images/popup/icon/error.svg" alt="" />
-							</td>
-						</tr>		<tr
-							class="table__content-tr"
-						>
-							<td class="table__content">test2</td>
-							<td class="table__content">a1</td>
-							<td class="table__content">
-								<img
-									v-if="true"
-									src="@/assets/images/popup/icon/correct.svg"
-									alt=""
-								/>
-								<img v-else src="@/assets/images/popup/icon/error.svg" alt="" />
-							</td>
-						</tr>		<tr
-							class="table__content-tr"
-						>
-							<td class="table__content">test2</td>
-							<td class="table__content">a1</td>
-							<td class="table__content">
-								<img
-									v-if="true"
-									src="@/assets/images/popup/icon/correct.svg"
-									alt=""
-								/>
-								<img v-else src="@/assets/images/popup/icon/error.svg" alt="" />
+								<img v-else src="@/assets/images/popup/icon/error.svg" />
 							</td>
 						</tr>
 					</table>
@@ -176,37 +163,90 @@
 
 <script>
 import CorrectPercentage from '@/components/teacher/history/CorrectPercentage.vue'
+
+import correct from '@/assets/images/popup/icon/correct.svg'
+import wrong from '@/assets/images/popup/icon/error.svg'
+
+import { useHistoryStore } from '@/stores/history'
+import { storeToRefs } from 'pinia'
+import { computed, ref } from 'vue'
+
 export default {
 	components: {
 		CorrectPercentage,
 	},
-	setup() {
-		const testData = {
-			playerName: 'test 1',
-			correctPercentage: '50',
-			score: '5',
-			unanswerCount: '3',
-			answers: [
-				{
-					answer: 'A',
-					correct: true,
-					score: '1',
-				},
-				{
-					answer: 'B',
-					correct: false,
-					score: '0',
-				},
-			],
+	setup(_, context) {
+		const store = useHistoryStore()
+		const { currentHistoryData, selectedQuestionIndex } = storeToRefs(store)
+		const { playerAmount, examData } = currentHistoryData.value
+		const { setSelectedQuestionIndex } = useHistoryStore()
+		const processCloseDetail = () => {
+			context.emit('setOpenDetail', false)
+			setSelectedQuestionIndex(0)
 		}
 
-		const questionTestData = {
-			questionTitle: 'Q1',
-			type: 'single',
-			answer: 'A',
+		const currentQuestionData = computed(() => {
+			return examData.questionList[selectedQuestionIndex.value]
+		})
+
+		// options
+		const optionTitleList = ['A', 'B', 'C', 'D']
+		const optionCorrectImage = (isCorrect) => {
+			if (isCorrect) {
+				return correct
+			}
+			return wrong
+		}
+		// 答這個選項的玩家數量
+		const getAmountOfPlayerAnswerThisOption = (index) => {
+			const answerThisOptionPlayerList = playerAnswerList.value.filter(
+				({ playerAnswer }) => playerAnswer === index
+			)
+			return answerThisOptionPlayerList.length
+		}
+		// 換算width百分比
+		const getProgressWidth = (index) => {
+			const playerAnswerAmount = getAmountOfPlayerAnswerThisOption(index)
+			const widthPercent = (playerAnswerAmount / playerAmount) * 100
+
+			return widthPercent
 		}
 
-		return { testData, questionTestData }
+		// playerAnswerList
+		const playerAnswerList = computed(() => {
+			return currentHistoryData.value[`question${selectedQuestionIndex.value}`]
+		})
+		console.log('playerAnswerList', playerAnswerList.value)
+
+		const amountOfPlayerNoAnswer = computed(() => {
+			return playerAmount - playerAnswerList.value.length
+		})
+
+		// 答對率
+		const questionCorrectPercentage = computed(() => {
+			const playerCorrectList = playerAnswerList.value.filter(
+				({ isCorrect }) => isCorrect
+			)
+
+			return (playerCorrectList.length / playerAmount) * 100
+		})
+
+		return {
+			examData,
+			currentQuestionData,
+			currentHistoryData,
+			selectedQuestionIndex,
+			optionTitleList,
+			playerAnswerList,
+			playerAmount,
+			amountOfPlayerNoAnswer,
+			questionCorrectPercentage,
+			processCloseDetail,
+			optionCorrectImage,
+			getAmountOfPlayerAnswerThisOption,
+			getProgressWidth,
+			setSelectedQuestionIndex,
+		}
 	},
 }
 </script>
