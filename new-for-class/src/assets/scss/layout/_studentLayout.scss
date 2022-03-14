@@ -1,70 +1,72 @@
 .student-layout {
-  position: relative;
+	position: relative;
 
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 
-  width: 100%;
-  max-width: 768px;
-  height: 100vh;
-  margin: 0 auto;
-  padding-bottom: env(safe-area-inset-bottom);
+	width: 100%;
+	max-width: 768px;
+	height: 100vh;
+	margin: 0 auto;
+	padding-bottom: env(safe-area-inset-bottom);
 
-  $student-header-height: 50px;
-  $student-footer-height: 50px;
+	$student-header-height: 50px;
+	$student-footer-height: 50px;
 
-  &__header {
-    position: relative;
+	&__header {
+		position: relative;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+		justify-content: center;
 
-    height: $student-header-height;
+		height: $student-header-height;
 
-    background-color: #fff;
+		background-color: #fff;
 
-    .title {
-      text-align: center;
-    }
+		.title {
+			text-align: center;
+		}
 
-    .button {
-      position: absolute;
-      top: 50%;
-      right: 10px;
+		.button {
+			position: absolute;
+			top: 50%;
+			right: 10px;
 
-      display: flex;
-      align-items: center;
+			display: flex;
+			align-items: center;
 
-      height: $student-header-height - 20;
-      padding: 0 10px;
+			height: $student-header-height - 20;
+			padding: 0 10px;
 
-      transform: translateY(-50%);
+			transform: translateY(-50%);
 
-      border-radius: 5px;
-      background-color: #26a69a;
-    }
-  }
+			border-radius: 5px;
+			background-color: #26a69a;
+		}
+	}
 
-  &__content {
-    flex-grow: 1;
+	&__content {
+		flex-grow: 1;
 
-    background-color: #aee8f3;
-  }
+		background-color: #aee8f3;
+	}
 
-  &__footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+	&__footer {
+		display: flex;
+		align-items: center;
+		flex-shrink: 0;
+		justify-content: flex-start;
 
-    height: $student-footer-height;
+		height: $student-footer-height;
 
-    background-color: #fff;
+		background-color: #fff;
 
-    .player {
-      padding-left: 10px;
+		.player {
+			padding-left: 10px;
 
-      color: #000500;
-    }
-  }
+			color: #000500;
+		}
+	}
 }

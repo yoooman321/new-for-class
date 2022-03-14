@@ -72,13 +72,15 @@ export default {
 
 		// store
 		const store = useStudentGameStore()
-		const { playerInformation } = storeToRefs(store)
+		const { playerInformation, questionList, shortAnswer } = storeToRefs(store)
 		const {
 			setQuestionList,
 			setIsSentAnswer,
 			setIsCorrect,
 			setPlayerInformation,
 			setPlayerScore,
+			setPlayerShortAnswerList,
+			setPlayerShortAnswer,
 		} = useStudentGameStore()
 
 		// 標題顯示
@@ -156,32 +158,84 @@ export default {
 
 		// 送答案
 		const progressSendAnswer = async () => {
-			const isCorrect = checkAnswerIsCorrect(questionIndex.value)
+			const { answerType } = questionList.value[questionIndex.value]
+			const playerInformationToFirebase = getPlayerData(answerType)
 
-			if (isCorrect) {
-				console.log('playerInformation.value.score', playerInformation.value.score);
-				
-				setPlayerScore(playerInformation.value.score + 1)
-			}
+			setPlayerInformation(playerInformationToFirebase)
 
-			setIsCorrect(isCorrect)
-			const playerInformationToFirebase = {
-				playerName: playerInformation.value.playerName,
-				isCorrect,
-				questionIndex: questionIndex.value,
-				playerAnswer: playerInformation.value.playerAnswer,
-				score: playerInformation.value.score,
-			}
 
 			try {
 				await setPlayerInformationToFirebase(
 					examId,
 					playerInformationToFirebase
 				)
-				setIsSentAnswer(true)
+				setPlayerShortAnswer('')
+				if (answerType !== 'shortAnswer') {
+					setIsSentAnswer(true)
+				}
 			} catch (e) {
 				// do something
 			}
+		}
+
+		const getPlayerData = (answerType) => {
+			console.log('answerType', answerType)
+
+			switch (answerType) {
+				case 'singleAnswer':
+					return getPlayerDataBySingleAnswer()
+				case 'shortAnswer':
+					return getPlayerDataByShortAnswer()
+				case 'statistics':
+					return getPlayerDataBystatistics()
+				default:
+					return null
+			}
+		}
+
+		const getPlayerDataBySingleAnswer = () => {
+			const isCorrect = checkAnswerIsCorrect(questionIndex.value)
+			let playerScore = playerInformation.value.score
+			if (isCorrect) {
+				console.log(
+					'playerInformation.value.score',
+					playerInformation.value.score
+				)
+				playerScore += 1
+			}
+			console.log('ddd', playerInformation.value.score)
+			const playerInformationToFirebase = {
+				playerName: playerInformation.value.playerName,
+				isCorrect,
+				questionIndex: questionIndex.value,
+				playerAnswer: playerInformation.value.playerAnswer,
+				score: playerScore,
+			}
+			return playerInformationToFirebase
+		}
+
+		const getPlayerDataBystatistics = () => {
+			const playerInformationToFirebase = {
+				playerName: playerInformation.value.playerName,
+				questionIndex: questionIndex.value,
+				playerAnswer: playerInformation.value.playerAnswer,
+				score: playerInformation.value.score,
+			}
+			return playerInformationToFirebase
+		}
+
+		const getPlayerDataByShortAnswer = () => {
+			const playerInformationToFirebase = {
+				playerName: playerInformation.value.playerName,
+				questionIndex: questionIndex.value,
+				playerAnswer: [
+					...playerInformation.value.playerAnswer,
+					shortAnswer.value,
+				],
+				score: playerInformation.value.score,
+			}
+
+			return playerInformationToFirebase
 		}
 
 		return { page, titleText, playerInformation, progressSendAnswer }

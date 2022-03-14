@@ -27,7 +27,7 @@
 						<select name="answerType" v-model="answerType" class="input__field">
 							<option value="singleAnswer">單選題</option>
 							<option value="shortAnswer">問答題</option>
-							<option value="statistics">統計數量</option>
+							<option value="statistics">統計題</option>
 						</select>
 					</div>
 					<div class="configuration configuration__time">
@@ -37,7 +37,10 @@
 				</div>
 
 				<div class="answer-options" v-if="answerType !== 'shortAnswer'">
-					<div class="input__title">答案選項 (請勾選正確答案)</div>
+					<div class="input__title">
+						<span>答案選項 </span>
+						<span v-if="answerType === 'singleAnswer'">(請勾選正確答案)</span>
+					</div>
 
 					<div class="options">
 						<template

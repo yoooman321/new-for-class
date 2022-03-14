@@ -32,7 +32,7 @@ export const useExamStore = defineStore('exam', {
 			this.examData.questionList[index][propertyName] = propertyValue
 
 			if (propertyName === 'answerType') {
-				const defaultOptions = [
+				const singleAnswerDefaultOptions = [
 					{
 						optionValue: '',
 						isAnswer: false,
@@ -42,12 +42,30 @@ export const useExamStore = defineStore('exam', {
 					{ optionValue: '', isAnswer: false },
 				]
 
+				const statisticsDefaultOptions = [
+					{
+						optionValue: '',
+						isAnswer: true,
+					},
+					{ optionValue: '', isAnswer: true },
+					{ optionValue: '', isAnswer: true },
+					{ optionValue: '', isAnswer: true },
+				]
+
 				switch (propertyValue) {
 					case 'shortAnswer':
 						this.setQuestionData(index, 'options', null)
 						break
+
+					case 'statistics':
+						this.setQuestionData(index, 'options', statisticsDefaultOptions)
+						break
+
+					case 'singleAnswer':
+						this.setQuestionData(index, 'options', singleAnswerDefaultOptions)
+						break
+
 					default:
-						this.setQuestionData(index, 'options', defaultOptions)
 						break
 				}
 			}

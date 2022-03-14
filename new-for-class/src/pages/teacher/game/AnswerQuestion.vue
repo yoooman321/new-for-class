@@ -1,9 +1,8 @@
 <template>
 	<div class="teacher-answer-question-page">
-		<div class="answer-question__question-part">{{questionTitle}}</div>
+		<div class="answer-question__question-part">{{ questionTitle }}</div>
 
-		<OptionsAnswer />
-
+		<component :is="answerTypeComponent"></component>
 		<!-- <audio
       ref="audio"
       autoplay
@@ -16,19 +15,34 @@
 
 <script>
 import { useTeacherGameStore } from '@/stores/teacherGame'
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import OptionsAnswer from '@/components/teacher/game/OptionsAnswer.vue'
+import WordCloudAnswer from '@/components/teacher/game/WordCloudAnswer.vue'
 import music from '@/assets/audio/bgm.mp3'
 
 export default {
 	components: {
 		OptionsAnswer,
+		WordCloudAnswer,
 	},
 
 	setup() {
 		// store
 		const { currentQuestion } = useTeacherGameStore()
 
+		const answerTypeComponent = ref('')
+
+		switch (currentQuestion.answerType) {
+			case 'singleAnswer':
+			case 'statistics':
+				answerTypeComponent.value = 'OptionsAnswer'
+				break
+			case 'shortAnswer':
+				answerTypeComponent.value = 'WordCloudAnswer'
+				break
+			default:
+				break
+		}
 		// const audio = ref(null);
 		// const aaa = ref(null);
 		// onMounted(() => {
@@ -50,7 +64,7 @@ export default {
 		//   audio,test,aaa
 		// };
 
-		return { questionTitle: currentQuestion.questionTitle }
+		return { questionTitle: currentQuestion.questionTitle, answerTypeComponent }
 	},
 }
 </script>

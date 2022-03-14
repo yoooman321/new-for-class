@@ -7,6 +7,7 @@ export const useStudentGameStore = defineStore('studentGame', {
 			lobbyComponent: 'EnterGame',
 			playerInformation: {},
 			isSentAnswer: false,
+			shortAnswer: '',
 		}
 	},
 
@@ -30,6 +31,17 @@ export const useStudentGameStore = defineStore('studentGame', {
 		// for single answer
 		setPlayerAnswer(answer) {
 			this.playerInformation.playerAnswer = answer
+		},
+
+		setPlayerShortAnswerList() {
+			this.playerInformation.playerAnswer = [
+				...this.playerInformation.playerAnswer,
+				this.shortAnswer,
+			]
+		},
+
+		setPlayerShortAnswer(shortAnswer) {
+			this.shortAnswer = shortAnswer
 		},
 
 		setIsSentAnswer(booleanData) {

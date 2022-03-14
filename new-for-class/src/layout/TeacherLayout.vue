@@ -59,9 +59,8 @@ export default {
 
 		// 取得資料庫資料後存入vuex
 		const processGetRoomsInformation = async () => {
-			const { page, questionIndex, questionList, historyID } = await getRoomsInformation(
-				examId
-			)
+			const { page, questionIndex, questionList, historyID } =
+				await getRoomsInformation(examId)
 
 			setPage(page)
 			setQuestionIndex(questionIndex)
@@ -69,7 +68,7 @@ export default {
 			setHistoryID(historyID)
 		}
 
-		watch(questionIndex, async() => {
+		watch(questionIndex, async () => {
 			playerListener()
 			setPlayerList([])
 

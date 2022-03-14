@@ -72,7 +72,8 @@ export default {
 			}
 		}
 
-		const { setPlayerName, setLobbyComponent } = useStudentGameStore()
+		const { setPlayerName, setLobbyComponent, setPlayerInformation } =
+			useStudentGameStore()
 		const playerName = ref('')
 
 		return { processSignUpForGame, playerName }
@@ -82,5 +83,4 @@ export default {
 
 <style lang="scss">
 @import '@/assets/scss/components/student/_enterGame.scss';
-
 </style>
