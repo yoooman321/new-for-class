@@ -23,11 +23,11 @@ export default function useTeacherGame() {
 	}
 
 	const setExamDataToFirebase = async (examId, examData) => {
-		const { questionList, historyID } = examData
+		const { questionList, historyID, showRankingPage } = examData
 		try {
 			await setDoc(
 				doc(db, 'rooms', examId),
-				{ questionList, historyID },
+				{ questionList, historyID, showRankingPage },
 				{ merge: true }
 			)
 		} catch (e) {

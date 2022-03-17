@@ -16,6 +16,11 @@
 					<div class="input__title fz-18 c-text-main fw-500">問題:</div>
 					<input class="input__field" type="text" v-model="questionTitle" />
 				</div>
+
+				<div v-if="answerType === 'singleAnswer'" class="show-result-page">
+					<input type="checkbox" v-model="showResultPage" />
+					<label class="text fw-600">是否顯示目前戰況?</label>
+				</div>
 			</div>
 
 			<div class="answer-part">
@@ -145,6 +150,13 @@ export default {
 			},
 		})
 
+		const showResultPage = computed({
+			get: () => examData.questionList[questionIndex].showResultPage,
+			set: (value) => {
+				setQuestionData(questionIndex, 'showResultPage', value)
+			}
+		})
+
 		const changeOptionValue = (optionIndex, value) => {
 			setOptionsData(questionIndex, optionIndex, 'optionValue', value)
 		}
@@ -162,6 +174,7 @@ export default {
 			questionIndex,
 			answerType,
 			limitedTime,
+			showResultPage,
 			setOptionsData,
 			changeOptionValue,
 			changeOptionIsAnswer,

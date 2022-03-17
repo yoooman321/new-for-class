@@ -12,6 +12,11 @@
 				/>
 			</div>
 
+			<div class="ranking-check">
+				<input type="checkbox" v-model="showRankingPage" />
+				<label class="text fw-600">是否顯示最後排行?</label>
+			</div>
+
 			<div class="question-sets">
 				<draggable
 					:list="examData.questionList"
@@ -105,6 +110,15 @@ export default {
 			},
 		})
 
+		const showRankingPage = computed({
+			get: () => {
+				return store.examData.showRankingPage
+			},
+			set: (value) => {
+				store.setExamShowRankingPage(value)
+			},
+		})
+
 		const processSaveExamDataToFirebase = async () => {
 			try {
 				const response = await saveExamDataToFirebase()
@@ -116,12 +130,14 @@ export default {
 		}
 
 		onBeforeUnmount(() => {
+			store.cleanExamData()
 			// DO Something - 確認要離開?
 		})
 
 		return {
 			examData: store.examData,
 			examTitle,
+			showRankingPage,
 			dragging,
 			addQuestion: store.addQuestion,
 			processSaveExamDataToFirebase,

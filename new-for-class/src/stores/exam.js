@@ -5,11 +5,13 @@ export const useExamStore = defineStore('exam', {
 		return {
 			examData: {
 				examTitle: '',
+				showRankingPage: false,
 				questionList: [
 					{
 						limitedTime: 20,
 						answerType: 'singleAnswer',
 						questionTitle: '',
+						showResultPage: false,
 						options: [
 							{
 								optionValue: '',
@@ -55,10 +57,12 @@ export const useExamStore = defineStore('exam', {
 				switch (propertyValue) {
 					case 'shortAnswer':
 						this.setQuestionData(index, 'options', null)
+						this.setQuestionData(questionIndex, 'showResultPage', false)
 						break
 
 					case 'statistics':
 						this.setQuestionData(index, 'options', statisticsDefaultOptions)
+						this.setQuestionData(questionIndex, 'showResultPage', false)
 						break
 
 					case 'singleAnswer':
@@ -73,6 +77,10 @@ export const useExamStore = defineStore('exam', {
 
 		setExamTitle(title) {
 			this.examData.examTitle = title
+		},
+
+		setExamShowRankingPage(booleanData) {
+			this.examData.showRankingPage = booleanData
 		},
 
 		setOptionsData(questionIndex, optionIndex, propertyName, propertyValue) {
@@ -103,6 +111,7 @@ export const useExamStore = defineStore('exam', {
 				limitedTime: 20,
 				answerType: 'singleAnswer',
 				questionTitle: '',
+				showResultPage: false,
 				options: [
 					{
 						optionValue: '',
@@ -119,11 +128,13 @@ export const useExamStore = defineStore('exam', {
 		cleanExamData() {
 			this.examData = {
 				examTitle: '',
+				showRankingPage: false,
 				questionList: [
 					{
 						limitedTime: 20,
 						answerType: 'singleAnswer',
 						questionTitle: '',
+						showResultPage: false,
 						options: [
 							{
 								optionValue: '',

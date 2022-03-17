@@ -8,7 +8,8 @@ export const useTeacherGameStore = defineStore('teacherGame', {
 			page: '',
 			currentQuestion: {},
 			playerList: [],
-			historyID: ''
+			historyID: '',
+			showRankingPage: false,
 		}
 	},
 
@@ -35,6 +36,10 @@ export const useTeacherGameStore = defineStore('teacherGame', {
 
 		setHistoryID(historyID) {
 			this.historyID = historyID
+		},
+
+		setShowRankingPage(showRankingPage) {
+			this.showRankingPage = showRankingPage
 		}
 	},
 })

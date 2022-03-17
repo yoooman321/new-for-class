@@ -13,6 +13,16 @@
 			padding-bottom: 20px;
 
 			border-bottom: 2px solid gray;
+
+			.show-result-page {
+				padding: 10px 0;
+				input[type='checkbox'] {
+					transform: scale(2);
+				}
+				.text {
+					padding-left: 10px;
+				}
+			}
 		}
 
 		&-index {
