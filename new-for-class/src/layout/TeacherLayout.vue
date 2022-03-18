@@ -9,6 +9,8 @@ import Lobby from '@/pages/teacher/game/Lobby.vue'
 import QuestionDisplay from '@/pages/teacher/game/QuestionDisplay.vue'
 import AnswerQuestion from '@/pages/teacher/game/AnswerQuestion.vue'
 import Finish from '@/pages/teacher/game/Finish.vue'
+import Result from '@/pages/teacher/game/Result.vue'
+import FinishWithRanking from '@/pages/teacher/game/FinishWithRanking.vue'
 
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 import { useTeacherGameStore } from '@/stores/teacherGame'
@@ -28,6 +30,8 @@ export default {
 		QuestionDisplay,
 		AnswerQuestion,
 		Finish,
+		Result,
+		FinishWithRanking,
 	},
 
 	props: {
@@ -52,6 +56,7 @@ export default {
 			setPage,
 			setPlayerList,
 			setHistoryID,
+			setShowRankingPage,
 		} = useTeacherGameStore()
 
 		// hooks
@@ -59,13 +64,14 @@ export default {
 
 		// 取得資料庫資料後存入vuex
 		const processGetRoomsInformation = async () => {
-			const { page, questionIndex, questionList, historyID } =
+			const { page, questionIndex, questionList, historyID, showRankingPage } =
 				await getRoomsInformation(examId)
 
 			setPage(page)
 			setQuestionIndex(questionIndex)
 			setQuestionList(questionList)
 			setHistoryID(historyID)
+			setShowRankingPage(showRankingPage)
 		}
 
 		watch(questionIndex, async () => {

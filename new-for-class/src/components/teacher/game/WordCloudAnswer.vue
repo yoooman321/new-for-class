@@ -42,7 +42,7 @@ export default {
 
 		// store
 		const store = useTeacherGameStore()
-		const { playerList } = storeToRefs(store)
+		const { playerList, showRankingPage } = storeToRefs(store)
 		const {
 			setQuestionIndex,
 			questionIndex,
@@ -117,12 +117,16 @@ export default {
 				return
 			}
 
-			try {
-				await setPageToFirebase(examId, 'Finish')
-				setPage('Finish')
-			} catch (c) {
-				console.log('c', c)
+			let pageName = ''
+			if (showRankingPage.value) {
+				pageName = 'FinishWithRanking'
+			} else {
+				pageName = 'Finish'
 			}
+			try {
+				await setPageToFirebase(examId, pageName)
+				setPage(pageName)
+			} catch {}
 		}
 
 		// chart

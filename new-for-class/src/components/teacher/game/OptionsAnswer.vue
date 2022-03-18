@@ -4,12 +4,24 @@
 		<Timer class="timer-wrapper" @processCountDownOver="processCountDownOver" />
 		<div v-if="showStatistics" class="times-up-part">
 			<Statistics />
-			<div
-				class="next-button fz-40 c-fff cursor-pointer"
-				@click="processNextQuestion"
-			>
-				下一題
-			</div>
+
+			<template v-if="showButton">
+				<div
+					class="next-button fz-40 c-fff cursor-pointer"
+					@click="processNextQuestion"
+					v-if="!showResultPage"
+				>
+					下一題
+				</div>
+
+				<div
+					class="next-button fz-40 c-fff cursor-pointer"
+					@click="processShowResult"
+					v-else
+				>
+					回答狀況
+				</div>
+			</template>
 		</div>
 	</div>
 
@@ -60,22 +72,23 @@ export default {
 			setPage,
 			setCurrentQuestionInformation,
 		} = useTeacherGameStore()
-		const { options } = currentQuestion
+		const { options, showResultPage } = currentQuestion
 		const store = useTeacherGameStore()
-		const { playerList } = storeToRefs(store)
+		const { playerList, showRankingPage } = storeToRefs(store)
 
 		// hooks
 		const { setPageToFirebase, setHistoryDataToFirebase } = useTeacherGame()
 
 		const optionTitleList = ['A', 'B', 'C', 'D']
 		const showStatistics = ref(false)
+		const showButton = ref(false)
 
 		const processCountDownOver = async () => {
 			try {
 				await setPageToFirebase(examId, 'result')
 				showStatistics.value = true
 				await processSetPlayerAnswerToHistory()
-				setQuestionIndex(questionIndex + 1)
+				showButton.value = true
 			} catch (e) {
 				console.log('eeee', e)
 			}
@@ -92,6 +105,7 @@ export default {
 		const processNextQuestion = async () => {
 			if (questionIndex !== questionList.length - 1) {
 				try {
+					setQuestionIndex(questionIndex + 1)
 					setCurrentQuestionInformation()
 					await setPageToFirebase(examId, 'QuestionDisplay')
 					setPage('QuestionDisplay')
@@ -99,19 +113,31 @@ export default {
 
 				return
 			}
-
+			let pageName = ''
+			if (showRankingPage.value) {
+				pageName = 'FinishWithRanking'
+			} else {
+				pageName = 'Finish'
+			}
 			try {
-				await setPageToFirebase(examId, 'Finish')
-				setPage('Finish')
+				await setPageToFirebase(examId, pageName)
+				setPage(pageName)
 			} catch {}
+		}
+
+		const processShowResult = () => {
+			setPage('Result')
 		}
 
 		return {
 			optionTitleList,
 			showStatistics,
+			showButton,
 			options,
+			showResultPage,
 			processCountDownOver,
 			processNextQuestion,
+			processShowResult,
 		}
 	},
 }
