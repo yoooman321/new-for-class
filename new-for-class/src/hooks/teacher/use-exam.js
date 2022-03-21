@@ -8,6 +8,8 @@ import {
 	getDocs,
 	collection,
 	deleteDoc,
+	query,
+	orderBy,
 } from 'firebase/firestore'
 
 export default function useExamData() {
@@ -18,6 +20,7 @@ export default function useExamData() {
 
 	const saveExamDataToFirebase = async () => {
 		const examDataCloned = JSON.parse(JSON.stringify(store.examData))
+		examDataCloned.timestamp = new Date().getTime()
 
 		// firebase曾有過exam資料就直接覆蓋資料
 		if (!examDataCloned.examId) {
@@ -37,15 +40,17 @@ export default function useExamData() {
 
 	const getExamListFromFirebase = async () => {
 		const docRef = collection(db, 'users', uid, 'examList')
+		const queryType = query(docRef, orderBy('timestamp', 'desc'))
+
 		let examList = []
 		try {
-			const docSnap = await getDocs(docRef)
+			const docSnap = await getDocs(queryType)
 			docSnap.forEach((doc) => {
 				examList = [...examList, doc.data()]
 			})
 
 			return examList
-		} catch {
+		} catch (e) {
 			return examList
 		}
 	}
@@ -59,12 +64,13 @@ export default function useExamData() {
 	}
 
 	const startExamGame = async (promiseObject) => {
-		return Promise.all(promiseObject).then(() => {
-      return true
-    })
-		.catch((error) => {
-			return false
-		})
+		return Promise.all(promiseObject)
+			.then(() => {
+				return true
+			})
+			.catch((error) => {
+				return false
+			})
 	}
 
 	return {
