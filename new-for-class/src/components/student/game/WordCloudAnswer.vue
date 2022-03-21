@@ -2,7 +2,7 @@
 	<div class="student-word-cloud-answer">
 		<div class="input-wrapper">
 			<div class="input__title">請輸入答案(可重複輸入)</div>
-			<input type="text" class="input__field" v-model="answer" />
+			<input type="text" class="input__field fz-18" v-model="answer" />
 		</div>
 	</div>
 </template>
@@ -14,9 +14,8 @@ import { computed } from 'vue'
 
 export default {
 	setup() {
-    const store = useStudentGameStore()
-		const { setPlayerAnswer, setPlayerShortAnswer } =
-			useStudentGameStore()
+		const store = useStudentGameStore()
+		const { setPlayerAnswer, setPlayerShortAnswer } = useStudentGameStore()
 		const { shortAnswer } = storeToRefs(store)
 
 		setPlayerAnswer([])
@@ -32,3 +31,27 @@ export default {
 	},
 }
 </script>
+
+<style lang="scss">
+.student-word-cloud-answer {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	justify-content: flex-start;
+
+	height: 100%;
+	padding-top: 50px;
+
+	.input {
+		&__title {
+			padding-bottom: 20px;
+
+			text-align: center;
+		}
+
+		&__field {
+			height: 30px;
+		}
+	}
+}
+</style>
