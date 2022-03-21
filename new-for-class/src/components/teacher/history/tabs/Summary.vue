@@ -15,7 +15,8 @@
 					</div>
 				</div>
 				<div class="card__content">
-					<CorrectPercentage :percent="correctPercent" />
+					<div v-if="noSingleAnswerType">沒有任何單選題</div>
+					<CorrectPercentage v-else :percent="correctPercent" />
 				</div>
 			</div>
 
@@ -47,6 +48,16 @@
 					<tr class="table__title-tr">
 						<th class="table__title fw-600">學生名稱</th>
 						<th class="table__title fw-600">漏答題數</th>
+					</tr>
+
+					<tr>
+						<td
+							class="table__content table__content--no-student"
+							v-if="missAnsweredPlayer.length === 0"
+							colspan="2"
+						>
+							沒有漏答題的學生
+						</td>
 					</tr>
 
 					<tr
@@ -88,34 +99,42 @@ export default {
 				if (question.answerType === 'singleAnswer') {
 					questionIsSingleAnswerAmount++
 
-					const playerIsCorrectList = currentHistoryData.value[
-						`question${index}`
-					].filter(({ isCorrect }) => isCorrect)
-					playerAnsertIsCorrectAmount += playerIsCorrectList.length
+					if (currentHistoryData.value[`question${index}`]) {
+						const playerIsCorrectList = currentHistoryData.value[
+							`question${index}`
+						].filter(({ isCorrect }) => isCorrect)
+						playerAnsertIsCorrectAmount += playerIsCorrectList.length
+					}
 				}
 			}
 		)
-
+		
 		totalAmountOfAnswer =
 			questionIsSingleAnswerAmount * currentHistoryData.value.playerAmount
 		correctPercent.value =
 			(playerAnsertIsCorrectAmount / totalAmountOfAnswer) * 100
 
+		const noSingleAnswerType = ref(false)
+		if (isNaN(correctPercent.value)) {
+			noSingleAnswerType.value = true
+		}
 		// 漏答題
 		const playerObject = {}
 		const missAnsweredPlayer = ref([])
 		const questionAmount = currentHistoryData.value.examData.questionList.length
 
 		for (let index = 0; index < questionAmount; index++) {
-			currentHistoryData.value[`question${index}`].reduce((acc, cur) => {
-				if (acc[cur.playerName]) {
-					acc[cur.playerName] += 1
-				} else {
-					acc[cur.playerName] = 1
-				}
+			if (currentHistoryData.value[`question${index}`]) {
+				currentHistoryData.value[`question${index}`].reduce((acc, cur) => {
+					if (acc[cur.playerName]) {
+						acc[cur.playerName] += 1
+					} else {
+						acc[cur.playerName] = 1
+					}
 
-				return acc
-			}, playerObject)
+					return acc
+				}, playerObject)
+			}
 		}
 
 		Object.keys(playerObject).forEach((playerName) => {
@@ -127,7 +146,12 @@ export default {
 			}
 		})
 
-		return { currentHistoryData, correctPercent, missAnsweredPlayer }
+		return {
+			currentHistoryData,
+			correctPercent,
+			missAnsweredPlayer,
+			noSingleAnswerType,
+		}
 	},
 }
 </script>

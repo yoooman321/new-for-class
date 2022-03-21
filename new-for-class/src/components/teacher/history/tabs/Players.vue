@@ -16,7 +16,11 @@
 			>
 				<td class="table__content">{{ playerName }}</td>
 				<td class="table__content">
+					<div v-if="questionIsSingleAnswerAmount.length === 0">
+						沒有單選題
+					</div>
 					<CorrectPercentage
+						v-else
 						:percent="getPlayerCorrectPercentage(playerName)"
 					/>
 				</td>
@@ -50,6 +54,8 @@ export default {
 		const { examData } = currentHistoryData.value
 
 		const totalQuestionAmount = examData.questionList.length
+		const questionIsSingleAnswerAmount = examData.questionList.filter(({answerType}) => answerType === 'singleAnswer')
+		
 
 		// playerList
 		const playerList = reactive({})
@@ -98,6 +104,7 @@ export default {
 		return {
 			playerList,
 			openDetail,
+			questionIsSingleAnswerAmount,
 			getPlayerCorrectPercentage,
 			getUnAnswerAmount,
 			getPlayerScore,

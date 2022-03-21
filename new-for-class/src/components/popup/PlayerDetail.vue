@@ -55,7 +55,13 @@
 					<div class="card card--correct-percentage">
 						<div class="card__title">答對率</div>
 						<div class="card__content">
-							<CorrectPercentage :percent="getPlayerCorrectPercentage()" />
+							<div v-if="questionIsSingleAnswerAmount.length === 0">
+								沒有單選題
+							</div>
+							<CorrectPercentage
+								v-else
+								:percent="getPlayerCorrectPercentage()"
+							/>
 						</div>
 					</div>
 
@@ -90,8 +96,13 @@
 							</td>
 
 							<td class="table__content">
+								<div
+									v-if="getPlayerAnswerIsCorrect(index) === 'noCorrectAnswer'"
+								>
+									沒有對錯
+								</div>
 								<img
-									v-if="getPlayerAnswerIsCorrect(index)"
+									v-else-if="getPlayerAnswerIsCorrect(index)"
 									src="@/assets/images/popup/icon/correct.svg"
 									alt=""
 								/>
@@ -128,6 +139,9 @@ export default {
 		const { examData } = currentHistoryData.value
 		const totalQuestionAmount = examData.questionList.length
 		const totalPlayerAmount = Object.keys(playerData.value).length
+		const questionIsSingleAnswerAmount = examData.questionList.filter(
+			({ answerType }) => answerType === 'singleAnswer'
+		)
 
 		const playerOptions = computed(() => {
 			return playerData.value[selectedPlayerName.value].options
@@ -169,10 +183,17 @@ export default {
 				return '沒有作答'
 			}
 
+			if (typeof playerAnswer.playerAnswer === 'object') {
+				return playerAnswer.playerAnswer.join()
+			}
+
 			return optionTitleList[playerAnswer.playerAnswer]
 		}
 
 		const getPlayerAnswerIsCorrect = (index) => {
+			if (examData.questionList[index].answerType !== 'singleAnswer') {
+				return 'noCorrectAnswer'
+			}
 			const playerAnswer = playerOptions.value.find(
 				({ questionIndex }) => index === questionIndex
 			)
@@ -197,6 +218,7 @@ export default {
 			questionList: examData.questionList,
 			selectedPlayerIndex,
 			totalPlayerAmount,
+			questionIsSingleAnswerAmount,
 			processCloseDetail,
 			getPlayerCorrectPercentage,
 			getAnswerTypeText,

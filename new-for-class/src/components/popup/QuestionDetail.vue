@@ -59,7 +59,7 @@
 
 			<div class="question-detail__content">
 				<!-- 選項列表 -->
-				<div class="options">
+				<div class="options" v-if="currentQuestionData.options">
 					<div
 						class="option"
 						v-for="(option, index) in currentQuestionData.options"
@@ -79,7 +79,10 @@
 						</div>
 
 						<div class="option__answer-part">
-							<div class="option__correct">
+							<div
+								class="option__correct"
+								v-if="currentQuestionData.answerType === 'singleAnswer'"
+							>
 								<img :src="optionCorrectImage(option.isAnswer)" />
 							</div>
 							<div class="option__progress-wrapper">
@@ -98,7 +101,10 @@
 					<div class="option option--no-answer">
 						<div class="option__text">No answer</div>
 						<div class="option__answer-part">
-							<div class="option__correct">
+							<div
+								class="option__correct"
+								v-if="currentQuestionData.answerType === 'singleAnswer'"
+							>
 								<img src="@/assets/images/popup/icon/error.svg" />
 							</div>
 							<div class="option__progress-wrapper">
@@ -118,6 +124,7 @@
 
 				<!-- 資訊欄位 -->
 				<div class="informations">
+					<div class="information">問題類型: {{ getQuestionTypeText() }}</div>
 					<div class="information">
 						秒數限制: {{ currentQuestionData.limitedTime }}秒
 					</div>
@@ -144,11 +151,19 @@
 						>
 							<td class="table__content">{{ player.playerName }}</td>
 							<td class="table__content">
-								{{ optionTitleList[player.playerAnswer] }}
+								<div v-if="currentQuestionData.answerType === 'shortAnswer'">
+									{{ player.playerAnswer.join() }}
+								</div>
+								<div v-else>
+									{{ optionTitleList[player.playerAnswer] }}
+								</div>
 							</td>
 							<td class="table__content">
+								<div v-if="currentQuestionData.answerType !== 'singleAnswer'">
+									沒有對錯
+								</div>
 								<img
-									v-if="player.isCorrect"
+									v-else-if="player.isCorrect"
 									src="@/assets/images/popup/icon/correct.svg"
 								/>
 								<img v-else src="@/assets/images/popup/icon/error.svg" />
@@ -216,7 +231,6 @@ export default {
 		const playerAnswerList = computed(() => {
 			return currentHistoryData.value[`question${selectedQuestionIndex.value}`]
 		})
-		console.log('playerAnswerList', playerAnswerList.value)
 
 		const amountOfPlayerNoAnswer = computed(() => {
 			return playerAmount - playerAnswerList.value.length
@@ -230,6 +244,35 @@ export default {
 
 			return (playerCorrectList.length / playerAmount) * 100
 		})
+
+		const getPlayerAnswer = (index) => {
+			const playerAnswer = playerOptions.value.find(
+				({ questionIndex }) => index === questionIndex
+			)
+
+			if (!playerAnswer) {
+				return '沒有作答'
+			}
+
+			if (typeof playerAnswer.playerAnswer === 'object') {
+				return playerAnswer.playerAnswer.join()
+			}
+
+			return optionTitleList[playerAnswer.playerAnswer]
+		}
+
+		const getQuestionTypeText = () => {
+			switch (currentQuestionData.value.answerType) {
+				case 'singleAnswer':
+					return '單選題'
+				case 'shortAnswer':
+					return '問答題'
+				case 'statistics':
+					return '統計題'
+				default:
+					return ''
+			}
+		}
 
 		return {
 			examData,
@@ -246,6 +289,8 @@ export default {
 			getAmountOfPlayerAnswerThisOption,
 			getProgressWidth,
 			setSelectedQuestionIndex,
+			getPlayerAnswer,
+			getQuestionTypeText,
 		}
 	},
 }
