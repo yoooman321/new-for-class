@@ -27,6 +27,8 @@ import QuestionDisplay from '@/pages/student/game/QuestionDisplay.vue'
 import AnswerQuestion from '@/pages/student/game/AnswerQuestion.vue'
 import Result from '@/pages/student/game/Result.vue'
 import Finish from '@/pages/student/game/Finish.vue'
+import TimesUp from '@/pages/student/game/TimesUp.vue'
+import FinishWithRanking from '@/pages/student/game/FinishWithRanking.vue'
 
 import { useRouter } from 'vue-router'
 import { useStudentGameStore } from '@/stores/studentGame'
@@ -43,6 +45,8 @@ export default {
 		AnswerQuestion,
 		Result,
 		Finish,
+		TimesUp,
+		FinishWithRanking,
 	},
 
 	props: {
@@ -76,10 +80,7 @@ export default {
 		const {
 			setQuestionList,
 			setIsSentAnswer,
-			setIsCorrect,
 			setPlayerInformation,
-			setPlayerScore,
-			setPlayerShortAnswerList,
 			setPlayerShortAnswer,
 		} = useStudentGameStore()
 
@@ -93,10 +94,12 @@ export default {
 					return '等待作答'
 
 				case 'Finish':
+				case 'FinishWithRanking':
 					return '遊戲結束'
 
 				case 'AnswerQuestion':
 				case 'result':
+				case 'teims-up':
 					return `Question ${questionIndex.value + 1}`
 
 				default:

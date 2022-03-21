@@ -84,8 +84,13 @@ export default {
 		const showButton = ref(false)
 
 		const processCountDownOver = async () => {
+			let studentPage = 'result'
+				if (currentQuestion.answerType === 'statistics') {
+					studentPage = 'times-up'
+				}
+				
 			try {
-				await setPageToFirebase(examId, 'result')
+				await setPageToFirebase(examId, studentPage)
 				showStatistics.value = true
 				await processSetPlayerAnswerToHistory()
 				showButton.value = true
