@@ -9,6 +9,9 @@
 		>
 			<span slot="legend-value">{{ count }}</span>
 		</VeProgress>
+
+		<audio ref="timerMusic" :src="countMusic" controls :hidden="true"></audio>
+
 	</div>
 </template>
 
@@ -30,6 +33,9 @@ export default {
 		let count = ref(limitedTime)
 		let timer = null
 		let percent = ref(0)
+
+		const timerMusic = ref(null)
+
 		const countdown = () => {
 			if (count.value <= 1) {
 				clearInterval(timer)
@@ -48,17 +54,17 @@ export default {
 			return '#41d3bd'
 		}
 
-		// watch(count, (count, prevCount) => {
-		// 	if (count === 4) {
-		// 		setTimeout(() => {
-		// 			const myAudio = new Audio(countMusic)
-		// 			myAudio.play()
-		// 		}, 500)
-		// 	}
-		// 	/* ... */
-		// })
+		watch(count, (count, prevCount) => {
+			if (count === 4) {
+				setTimeout(() => {
+				timerMusic.value.play()
+					// myAudio.play()
+				}, 500)
+			}
+			/* ... */
+		})
 
-		return { percent, count, setColor }
+		return { percent, count, setColor, countMusic, timerMusic }
 	},
 }
 </script>

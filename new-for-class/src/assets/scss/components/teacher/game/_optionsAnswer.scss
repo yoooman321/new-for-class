@@ -1,12 +1,4 @@
 .answer-question {
-	&__question-part {
-		flex-shrink: 0;
-
-		box-sizing: border-box;
-		padding-top: 20px;
-
-		text-align: center;
-	}
 
 	&__other-features {
 		position: relative;
@@ -17,10 +9,16 @@
 
 		padding: 20px;
 
-		.answered-player-list-wrapper {
+		.information-part {
+			height: 100%;
 			flex-grow: 1;
 
 			margin-right: 10px;
+		}
+
+		.empty-part {
+			width: 15%;
+			flex-shrink: 0;
 		}
 
 		.times-up-part {
@@ -35,6 +33,7 @@
 			height: calc(100% - 10px);
 
 			background-color: rgba(0, 0, 0, 0.8);
+			padding-right: 15%;
 
 			.next-button {
 				flex-shrink: 0;

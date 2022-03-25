@@ -21,11 +21,15 @@
 			</div>
 		</div>
 	</div>
+
+	<audio :src="resultMusic" controls autoplay="autoplay" :hidden="true"></audio>
+
 </template>
 
 <script>
 import { storeToRefs } from 'pinia'
 import { useTeacherGameStore } from '@/stores/teacherGame'
+import resultMusic from '@/assets/audio/showResult.mp3'
 
 export default {
 	setup() {
@@ -54,6 +58,7 @@ export default {
 			statisitcsData,
 			totalAnswerAmount: answerList.length,
 			optionTitleList,
+			resultMusic,
 		}
 	},
 }

@@ -2,75 +2,23 @@
 	<div class="word-cloud-answer">
 		<div class="word-cloud-canvas" id="word-cloud-canvas"></div>
 
-		<div class="word-cloud-left-side">
-			<Timer
-				class="timer-wrapper"
-				@processCountDownOver="processCountDownOver"
-			/>
-			<div v-if="showNextQuestionButton" class="times-up-part">
-				<div
-					class="next-button fz-40 c-fff cursor-pointer"
-					@click="processNextQuestion"
-				>
-					下一題
-				</div>
-			</div>
-		</div>
+		<div class="empty-part"></div>
 	</div>
 </template>
 
 <script>
 import * as echarts from 'echarts'
 import 'echarts-wordcloud'
-import Timer from '@/components/teacher/game/Timer.vue'
 
 import { useTeacherGameStore } from '@/stores/teacherGame'
 import { storeToRefs } from 'pinia'
-import { onMounted, inject, ref, watch } from 'vue'
-import useTeacherGame from '@/hooks/teacher/use-teacher-game'
+import { onMounted, watch } from 'vue'
 
 export default {
-	components: {
-		Timer,
-	},
-
 	setup() {
-		// inject examId
-		const examId = inject('examId')
-
-		const showNextQuestionButton = ref(false)
-
 		// store
 		const store = useTeacherGameStore()
-		const { playerList, showRankingPage } = storeToRefs(store)
-		const {
-			setQuestionIndex,
-			questionIndex,
-			questionList,
-			setCurrentQuestionInformation,
-			setPage,
-		} = store
-
-		// hooks
-		const { setPageToFirebase, setHistoryDataToFirebase } = useTeacherGame()
-
-		const processCountDownOver = async () => {
-			try {
-				await setPageToFirebase(examId, 'times-up')
-				showNextQuestionButton.value = true
-				await processSetPlayerAnswerToHistory()
-			} catch (e) {
-				// DO SOMETHING
-			}
-		}
-
-		const processSetPlayerAnswerToHistory = async () => {
-			const historyData = {
-				[`question${questionIndex}`]: playerList.value,
-			}
-
-			await setHistoryDataToFirebase(historyData)
-		}
+		const { playerList } = storeToRefs(store)
 
 		// TODO: 命名要改
 		watch(playerList, (count, prevCount) => {
@@ -102,32 +50,6 @@ export default {
 				],
 			})
 		})
-
-		const processNextQuestion = async () => {
-			if (questionIndex !== questionList.length - 1) {
-				setQuestionIndex(questionIndex + 1)
-				try {
-					setCurrentQuestionInformation()
-					await setPageToFirebase(examId, 'QuestionDisplay')
-					setPage('QuestionDisplay')
-				} catch (w) {
-					console.log('w', w)
-				}
-
-				return
-			}
-
-			let pageName = ''
-			if (showRankingPage.value) {
-				pageName = 'FinishWithRanking'
-			} else {
-				pageName = 'Finish'
-			}
-			try {
-				await setPageToFirebase(examId, pageName)
-				setPage(pageName)
-			} catch {}
-		}
 
 		// chart
 		let chart = null
@@ -178,12 +100,9 @@ export default {
 			initChart()
 		})
 
-		return {
-			playerList,
-			processCountDownOver,
-			showNextQuestionButton,
-			processNextQuestion,
-		}
+		// return {
+		// 	playerList,
+		// }
 	},
 }
 </script>
@@ -203,26 +122,10 @@ export default {
 		height: 100%;
 	}
 
-	.word-cloud-left-side {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-
-		width: 20%;
-		height: 100%;
-	}
-
-	.next-button {
+	.empty-part {
 		flex-shrink: 0;
 
-		margin-right: 15px;
-		padding: 30px 15px;
-
-		border-radius: 10px;
-		background-color: #2c9f8d;
-
-		box-shadow: 1px 6px 8px 5px rgb(16, 56, 54);
+		width: 15%;
 	}
 }
 </style>
