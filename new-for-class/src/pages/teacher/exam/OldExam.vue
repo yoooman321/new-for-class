@@ -1,8 +1,12 @@
 <template>
-	<!-- TODO LOADING  -->
 	<div class="old-exam-page">
 		<div class="old-exam-header">
 			<div class="old-exam__title fz-20 fw-600 c-text-main">我的考題</div>
+		</div>
+
+		<div class="delete-data">
+			<div class="delete-data__button c-fff" @click="processDeleteTeacherRooms()">刪除資料庫資料</div>
+			<div class="delete-data__text fz-12">(建議開始遊戲前都按一次)</div>
 		</div>
 
 		<table class="old-exam-table">
@@ -57,13 +61,14 @@ export default {
 		const { oldExamList } = storeToRefs(store)
 
 		// hook
-		const { getExamListFromFirebase, deleteExamFromFirebase, startExamGame } =
+		const { getExamListFromFirebase, deleteExamFromFirebase, startExamGame, deleteTeacherRooms } =
 			useExamData()
 		const {
 			setPageToFirebase,
 			setExamDataToFirebase,
 			setQuestionIndexToFirebase,
 			addHistoryToFirebase,
+			deleteOldPlayers,
 		} = useTeacherGame()
 
 		// router
@@ -102,6 +107,7 @@ export default {
 				setExamDataToFirebase(examId, examData),
 				setQuestionIndexToFirebase(examId, -1),
 				addHistoryToFirebase(examId, timeStamp, examData),
+				deleteOldPlayers(examId),
 			]
 
 			try {
@@ -123,6 +129,11 @@ export default {
 			}
 		}
 
+		// 移除資料庫資料
+		const processDeleteTeacherRooms = async() => {
+			deleteTeacherRooms()
+		}
+
 		onBeforeMount(() => {
 			processGetExamListFromFirebase()
 		})
@@ -132,6 +143,7 @@ export default {
 			goToEditPage,
 			processDeleteExamFromFirebase,
 			processStartExamGame,
+			processDeleteTeacherRooms,
 		}
 	},
 }

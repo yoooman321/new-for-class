@@ -1,6 +1,5 @@
 import { useExamStore } from '@/stores/exam'
 import { useTeacherGameStore } from '@/stores/teacherGame'
-
 import {
 	getFirestore,
 	doc,
@@ -10,7 +9,9 @@ import {
 	deleteDoc,
 	query,
 	orderBy,
+	where,
 } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
 
 export default function useExamData() {
 	const store = useExamStore()
@@ -73,10 +74,28 @@ export default function useExamData() {
 			})
 	}
 
+	const deleteTeacherRooms = async () => {
+		const auth = getAuth()
+		const creater = auth.currentUser.email
+		const allRooms = collection(db, 'rooms')
+		const myRooms = query(allRooms, where('roomCreater', '==', creater))
+
+		try {
+			const docSnap = await getDocs(myRooms)
+			docSnap.forEach((room) => {
+				const roomDoc = doc(db, 'rooms', room.id)
+				deleteDoc(roomDoc)
+			})
+		} catch (error) {
+			throw new Error(400)
+		}
+	}
+
 	return {
 		saveExamDataToFirebase,
 		getExamListFromFirebase,
 		deleteExamFromFirebase,
 		startExamGame,
+		deleteTeacherRooms,
 	}
 }

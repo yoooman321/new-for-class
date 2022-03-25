@@ -76,4 +76,19 @@
 			}
 		}
 	}
+
+	.delete-data {
+		text-align: right;
+		&__button {
+			display: inline-block;
+
+			margin-bottom: 5px;
+			padding: 10px;
+
+			cursor: pointer;
+
+			border-radius: 7px;
+			background-color: #c10015;
+		}
+	}
 }

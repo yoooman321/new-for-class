@@ -105,7 +105,7 @@
 
 <script>
 import { Form, Field } from 'vee-validate'
-import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
 import { useExamStore } from '@/stores/exam'
 
 import ConfirmDialog from '@/components/popup/ConfirmDialog.vue'
