@@ -57,12 +57,12 @@ export const useExamStore = defineStore('exam', {
 				switch (propertyValue) {
 					case 'shortAnswer':
 						this.setQuestionData(index, 'options', null)
-						this.setQuestionData(questionIndex, 'showResultPage', false)
+						this.setQuestionData(index, 'showResultPage', false)
 						break
 
 					case 'statistics':
 						this.setQuestionData(index, 'options', statisticsDefaultOptions)
-						this.setQuestionData(questionIndex, 'showResultPage', false)
+						this.setQuestionData(index, 'showResultPage', false)
 						break
 
 					case 'singleAnswer':

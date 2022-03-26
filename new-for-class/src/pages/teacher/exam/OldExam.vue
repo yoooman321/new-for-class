@@ -5,7 +5,12 @@
 		</div>
 
 		<div class="delete-data">
-			<div class="delete-data__button c-fff" @click="processDeleteTeacherRooms()">刪除資料庫資料</div>
+			<div
+				class="delete-data__button c-fff"
+				@click="processDeleteTeacherRooms()"
+			>
+				刪除資料庫資料
+			</div>
 			<div class="delete-data__text fz-12">(建議開始遊戲前都按一次)</div>
 		</div>
 
@@ -50,6 +55,7 @@
 import useExamData from '@/hooks/teacher/use-exam'
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 import { useExamStore } from '@/stores/exam'
+import { useSystemStore } from '@/stores/system'
 import { onBeforeMount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
@@ -59,10 +65,15 @@ export default {
 		// store
 		const store = useExamStore()
 		const { oldExamList } = storeToRefs(store)
+		const { switchLoadingFlag } = useSystemStore()
 
 		// hook
-		const { getExamListFromFirebase, deleteExamFromFirebase, startExamGame, deleteTeacherRooms } =
-			useExamData()
+		const {
+			getExamListFromFirebase,
+			deleteExamFromFirebase,
+			startExamGame,
+			deleteTeacherRooms,
+		} = useExamData()
 		const {
 			setPageToFirebase,
 			setExamDataToFirebase,
@@ -76,8 +87,10 @@ export default {
 
 		// 拿考題列表
 		const processGetExamListFromFirebase = async () => {
+			switchLoadingFlag(true)
 			const examList = await getExamListFromFirebase()
 			store.setOldExamList(examList)
+			switchLoadingFlag(false)
 		}
 
 		// 編輯
@@ -87,11 +100,14 @@ export default {
 
 		// 刪除
 		const processDeleteExamFromFirebase = async (examId) => {
+			switchLoadingFlag(true)
 			try {
 				await deleteExamFromFirebase(examId)
 				// Do something - 刪除成功，重新拿list
 				processGetExamListFromFirebase()
+				switchLoadingFlag(false)
 			} catch {
+				switchLoadingFlag(false)
 				// Do something - error message
 			}
 		}
@@ -111,18 +127,21 @@ export default {
 			]
 
 			try {
+				switchLoadingFlag(true)
 				const isSuccessful = await startExamGame(promiseList)
 				if (isSuccessful) {
 					const routeData = router.resolve({
 						name: 'StartGame',
 						params: { id: examId },
 					})
+					switchLoadingFlag(false)
 					window.open(routeData.href, '_blank')
 					return
 				}
 
 				// error message try again
 			} catch (e) {
+				switchLoadingFlag(false)
 				console.log('oooooo')
 
 				// do something
@@ -130,8 +149,14 @@ export default {
 		}
 
 		// 移除資料庫資料
-		const processDeleteTeacherRooms = async() => {
-			deleteTeacherRooms()
+		const processDeleteTeacherRooms = async () => {
+			try {
+				switchLoadingFlag(true)
+				await deleteTeacherRooms()
+				switchLoadingFlag(false)
+			} catch (error) {
+				switchLoadingFlag(false)
+			}
 		}
 
 		onBeforeMount(() => {

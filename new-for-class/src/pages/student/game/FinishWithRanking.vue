@@ -66,13 +66,5 @@ export default {
 			animation-delay: 0.8s;
 		}
 	}
-
-	@keyframes loading {
-		to {
-			transform: translateY(-25px);
-
-			opacity: 0.3;
-		}
-	}
 }
 </style>

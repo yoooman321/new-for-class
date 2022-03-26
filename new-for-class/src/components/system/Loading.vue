@@ -1,6 +1,5 @@
 <template>
-  	<div class="student-show-calculating">
-		<div class="text fw-600 fz-20">成績計算中...</div>
+	<div class="loading-page">
 		<div class="load">
 			<div class="load-dot load-dot--one"></div>
 			<div class="load-dot load-dot--two"></div>
@@ -10,22 +9,25 @@
 </template>
 
 <style lang="scss">
-.student-show-calculating {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	justify-content: center;
+.loading-page {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 
-	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
 
-	.text {
-		padding-bottom: 20px;
-		color: #0b132b;
-	}
 	.load {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+
 		display: flex;
 		align-items: center;
 		justify-content: center;
+
+		transform: translate(-50%, -50%);
 	}
 	.load-dot {
 		width: 25px;
@@ -39,7 +41,7 @@
 		animation-direction: alternate;
 
 		border-radius: 50%;
-		background-color: #0b132b;
+		background-color: #c5d5e4;
 
 		&--two {
 			animation-delay: 0.4s;

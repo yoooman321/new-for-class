@@ -43,6 +43,7 @@
 import useHistory from '@/hooks/teacher/use-history'
 import { onBeforeMount, ref } from 'vue'
 import { useHistoryStore } from '@/stores/history'
+import { useSystemStore } from '@/stores/system'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -56,6 +57,7 @@ export default {
 
 		// store
 		const { setCurrentHistoryData } = useHistoryStore()
+		const { switchLoadingFlag } = useSystemStore()
 
 		// router
 		const router = useRouter()
@@ -63,7 +65,9 @@ export default {
 		let historyList = ref([])
 
 		onBeforeMount(async () => {
+			switchLoadingFlag(true)
 			historyList.value = await getHistoryListFromFirebase()
+			switchLoadingFlag(false)
 		})
 
 		const processGoToHistoryDetailPage = (historyData) => {

@@ -52,7 +52,8 @@
 import QRCodeVue3 from 'qrcode-vue3'
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 import { useTeacherGameStore } from '@/stores/teacherGame'
-import { inject, watch } from 'vue'
+import { useSystemStore } from '@/stores/system'
+import { inject } from 'vue'
 import { storeToRefs } from 'pinia'
 
 export default {
@@ -66,6 +67,8 @@ export default {
 		const { setQuestionIndex, setPage, setCurrentQuestionInformation } =
 			useTeacherGameStore()
 		const { playerList } = storeToRefs(store)
+		
+		const { switchLoadingFlag } = useSystemStore()
 
 		// hooks
 		const { setPageToFirebase, setHistoryDataToFirebase } = useTeacherGame()
@@ -87,6 +90,7 @@ export default {
 		 * 4. set History player Amount
 		 */
 		const progressPlayGame = async () => {
+			switchLoadingFlag(true)
 			const historyData = {
 				playerAmount: playerList.value.length,
 			}
@@ -97,8 +101,10 @@ export default {
 			try {
 				await setHistoryDataToFirebase(historyData)
 				await setPageToFirebase(examId, 'QuestionDisplay')
+				switchLoadingFlag(false)
 				setPage('QuestionDisplay')
 			} catch (e) {
+				switchLoadingFlag(false)
 				// Error message try again?
 			}
 		}

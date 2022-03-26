@@ -54,7 +54,7 @@ export default {
 			return '#41d3bd'
 		}
 
-		watch(count, (count, prevCount) => {
+		watch(count, (count) => {
 			if (count === 4) {
 				setTimeout(() => {
 				timerMusic.value.play()

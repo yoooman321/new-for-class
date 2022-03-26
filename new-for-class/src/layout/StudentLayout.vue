@@ -32,6 +32,7 @@ import FinishWithRanking from '@/pages/student/game/FinishWithRanking.vue'
 
 import { useRouter } from 'vue-router'
 import { useStudentGameStore } from '@/stores/studentGame'
+import { useSystemStore } from '@/stores/system'
 import { computed, onBeforeMount, provide, ref } from 'vue'
 import { getFirestore, doc, onSnapshot } from 'firebase/firestore'
 import { storeToRefs } from 'pinia'
@@ -83,6 +84,8 @@ export default {
 			setPlayerInformation,
 			setPlayerShortAnswer,
 		} = useStudentGameStore()
+
+		const { switchLoadingFlag } = useSystemStore()
 
 		// 標題顯示
 		const titleText = computed(() => {
@@ -161,11 +164,11 @@ export default {
 
 		// 送答案
 		const progressSendAnswer = async () => {
+			switchLoadingFlag(true)
 			const { answerType } = questionList.value[questionIndex.value]
 			const playerInformationToFirebase = getPlayerData(answerType)
 
 			setPlayerInformation(playerInformationToFirebase)
-
 
 			try {
 				await setPlayerInformationToFirebase(
@@ -176,7 +179,9 @@ export default {
 				if (answerType !== 'shortAnswer') {
 					setIsSentAnswer(true)
 				}
+				switchLoadingFlag(false)
 			} catch (e) {
+				switchLoadingFlag(false)
 				// do something
 			}
 		}
