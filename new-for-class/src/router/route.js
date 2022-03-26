@@ -1,11 +1,11 @@
 // layout
 import MainLayout from '@/layout/MainLayout.vue'
+import AddExamLayout from '@/layout/AddExamLayout.vue'
 import TeacherLayout from '@/layout/TeacherLayout.vue'
 import StudentLayout from '@/layout/StudentLayout.vue'
 
 // pages
 import Home from '@/pages/teacher/Home.vue'
-import AddExam from '@/pages/teacher/exam/AddExam.vue'
 import OldExam from '@/pages/teacher/exam/OldExam.vue'
 import History from '@/pages/teacher/history/History.vue'
 import HistoryDetail from '@/pages/teacher/history/HistoryDetail.vue'
@@ -20,14 +20,8 @@ const routes = [
 		meta: { requiresAuth: true },
 		children: [
 			{ path: '', name: 'Index', component: Home },
-			{ path: '/new', name: 'NewExam', component: AddExam },
 			{ path: '/old', name: 'OldExam', component: OldExam },
-			{
-				path: '/edit/:id',
-				name: 'EditExam',
-				component: AddExam,
-				props: true,
-			},
+
 			{ path: '/history', name: 'History', component: History },
 			{
 				path: '/history/:id',
@@ -36,6 +30,13 @@ const routes = [
 				props: true,
 			},
 		],
+	},
+	{ path: '/new', name: 'NewExam', component: AddExamLayout },
+	{
+		path: '/edit/:id',
+		name: 'EditExam',
+		component: AddExamLayout,
+		props: true,
 	},
 	{
 		path: '/start/:id',
@@ -64,7 +65,7 @@ const routes = [
 		path: '/noroom',
 		component: NoExistRoom,
 		name: 'NoExistRoom',
-	}
+	},
 ]
 
 export default routes

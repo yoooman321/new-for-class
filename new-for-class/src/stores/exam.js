@@ -25,6 +25,7 @@ export const useExamStore = defineStore('exam', {
 				],
 			},
 
+			selectedQuestionIndex: 0,
 			oldExamList: [],
 		}
 	},
@@ -125,6 +126,10 @@ export const useExamStore = defineStore('exam', {
 			this.examData.questionList.push(defaultQuestionData)
 		},
 
+		changeSelectedQuestionIndex(index) {
+			this.selectedQuestionIndex = index
+		},
+
 		cleanExamData() {
 			this.examData = {
 				examTitle: '',
@@ -166,5 +171,9 @@ export const useExamStore = defineStore('exam', {
 		setTargetExamDataInExamData(targetExamData) {
 			this.examData = JSON.parse(JSON.stringify(targetExamData))
 		},
+
+		updateList(questionList) {
+			this.examData.questionList = questionList
+		}
 	},
 })

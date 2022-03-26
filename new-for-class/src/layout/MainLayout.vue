@@ -3,7 +3,9 @@
 		<!-- header -->
 		<div class="header bgc-main">
 			<div class="header-container">
-				<div class="title c-fff fz-20 fw-700">課堂使用</div>
+				<router-link to="/">
+					<div class="title c-fff fz-20 fw-700">課堂使用</div>
+				</router-link>
 
 				<div class="navbar-list">
 					<div
@@ -32,9 +34,7 @@
 									class="user-information__icon cursor-pointer"
 									src="@/assets/images/teacher/icon/logout.svg"
 								/>
-								<div class="user-information__text">
-									登出
-								</div>
+								<div class="user-information__text">登出</div>
 							</li>
 						</ul>
 					</li>

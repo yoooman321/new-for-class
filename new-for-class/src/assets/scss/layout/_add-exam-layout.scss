@@ -1,0 +1,141 @@
+.add-exam-layout {
+	display: flex;
+	overflow: hidden;
+	flex-direction: column;
+
+	width: 100vw;
+	height: 100vh;
+	.add-exam {
+		&__header {
+			// position: fixed;
+			// z-index: 1;
+			// top: 0;
+			// right: 0;
+			// left: 0;
+			flex-shrink: 0;
+
+			box-sizing: border-box;
+			height: 60px;
+			padding: 10px 10px;
+
+			box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+
+			&-container {
+				display: flex;
+				align-content: center;
+				align-items: center;
+
+				width: 100%;
+				height: 100%;
+
+				a {
+					text-decoration: initial;
+				}
+
+				.go-home {
+					flex-shrink: 0;
+
+					margin-right: 10px;
+				}
+
+				.input {
+					&-part {
+						display: flex;
+						align-items: center;
+						flex-grow: 1;
+
+						height: 100%;
+
+						.ranking-check {
+							padding: 0 10px;
+							input[type='checkbox'] {
+								transform: scale(2);
+							}
+							.text {
+								padding-left: 10px;
+							}
+						}
+					}
+
+					&__text {
+						display: flex;
+						align-items: center;
+
+						height: 100%;
+					}
+
+					&__field {
+						width: 300px;
+						height: 35px;
+
+						border: 1px solid rgba(0, 0, 0, 0.5);
+						border-radius: 5px;
+
+						&:focus-visible {
+							border: 1px solid map-get($color-array, 'main');
+							outline: initial;
+						}
+					}
+				}
+			}
+		}
+
+		&__button {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			height: 40px;
+			padding: 0 20px;
+
+			cursor: pointer;
+			transition: 0.3s;
+
+			border-radius: 5px;
+
+			&--save {
+				background-color: map-get($color-array, 'main');
+
+				&:hover {
+					background-color: #3189e2;
+				}
+			}
+
+			&--exit {
+				margin-right: 10px;
+
+				background-color: #e9e9e9;
+
+				&:hover {
+					background-color: #cecece;
+				}
+			}
+		}
+
+		&__content {
+			display: flex;
+			align-items: stretch;
+			flex-grow: 1;
+
+			height: 100%;
+			.question-list-view-wrapper {
+				overflow: auto;
+
+				box-sizing: border-box;
+				width: 15%;
+				height: 100%;
+				padding-bottom: 80px;
+
+				border-right: 1px solid #c0c0c0;
+
+				&::-webkit-scrollbar {
+					display: none;
+				}
+			}
+
+			.question-set-wrapper {
+				width: 85%;
+			}
+		}
+	}
+}

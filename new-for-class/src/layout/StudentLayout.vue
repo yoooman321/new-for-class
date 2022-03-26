@@ -139,6 +139,7 @@ export default {
 				return
 			}
 
+			switchLoadingFlag(false)
 			processGetInformationWhenRefresh()
 
 			// 監聽事件
