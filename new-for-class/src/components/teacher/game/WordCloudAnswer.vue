@@ -54,16 +54,17 @@ export default {
 		// chart
 		let chart = null
 		const chartTextColorList = [
-			'#820263',
-			'#D90368',
-			'#EADEDA',
-			'#2E294E',
-			'#FFD400',
+			'#345995',
+			'#E40066',
+			'#03CEA4',
+			'#FB4D3D',
+			'#A8201A',
+			'#143642',
+			'#EC9A29',
 			'#000000',
-			'#758BFD',
-			'#FF8600',
-			'#52796F',
-			'#686963',
+			'#AFA060',
+			'#FF9F1C',
+			'#307351',
 		]
 
 		const initChart = () => {
