@@ -1,9 +1,9 @@
 <template>
 	<div class="question-list-view">
 		<draggable
-			@change="changeQuestionSetIndex"
 			v-model="questionList"
 			item-key="questionTitle"
+			@change="changeQuestionSetIndex"
 		>
 			<template #item="{ element, index }">
 				<div

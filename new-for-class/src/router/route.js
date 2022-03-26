@@ -5,11 +5,11 @@ import TeacherLayout from '@/layout/TeacherLayout.vue'
 import StudentLayout from '@/layout/StudentLayout.vue'
 
 // pages
-import Home from '@/pages/teacher/Home.vue'
+import HomePage from '@/pages/teacher/HomePage.vue'
 import OldExam from '@/pages/teacher/exam/OldExam.vue'
-import History from '@/pages/teacher/history/History.vue'
+import HistoryPage from '@/pages/teacher/history/HistoryPage.vue'
 import HistoryDetail from '@/pages/teacher/history/HistoryDetail.vue'
-import Login from '@/pages/teacher/Login.vue'
+import LoginPage from '@/pages/teacher/LoginPage.vue'
 import RoomEntry from '@/pages/student/RoomEntry.vue'
 import NoExistRoom from '@/pages/student/NoExistRoom.vue'
 
@@ -19,10 +19,10 @@ const routes = [
 		component: MainLayout,
 		meta: { requiresAuth: true },
 		children: [
-			{ path: '', name: 'Index', component: Home },
+			{ path: '', name: 'Index', component: HomePage },
 			{ path: '/old', name: 'OldExam', component: OldExam },
 
-			{ path: '/history', name: 'History', component: History },
+			{ path: '/history', name: 'History', component: HistoryPage },
 			{
 				path: '/history/:id',
 				name: 'HistoryDetail',
@@ -53,7 +53,7 @@ const routes = [
 	},
 	{
 		path: '/login',
-		component: Login,
+		component: LoginPage,
 		name: 'Login',
 	},
 	{

@@ -108,9 +108,9 @@ export default {
 
 		const showSidebar = ref(false)
 
-		const setShowSidebar = () => {
-			showSidebar.value = !showSidebar.value
-		}
+		// const setShowSidebar = () => {
+		// 	showSidebar.value = !showSidebar.value
+		// }
 
 		const { switchLoadingFlag } = useSystemStore()
 

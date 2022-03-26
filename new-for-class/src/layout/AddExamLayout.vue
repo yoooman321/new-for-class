@@ -12,7 +12,7 @@
 					/>
 
 					<div class="ranking-check">
-						<input type="checkbox" v-model="showRankingPage" />
+						<input v-model="showRankingPage" type="checkbox" />
 						<label class="text">是否顯示最後排行?</label>
 					</div>
 				</div>
@@ -62,6 +62,7 @@ export default {
 	props: {
 		id: {
 			type: String,
+			default: '',
 		},
 	},
 
@@ -98,7 +99,7 @@ export default {
 		const processSaveExamDataToFirebase = async () => {
 			try {
 				switchLoadingFlag(true)
-				const response = await saveExamDataToFirebase()
+				await saveExamDataToFirebase()
 				cleanExamData()
 				router.push('/old')
 				switchLoadingFlag(false)
@@ -115,7 +116,7 @@ export default {
 
 		// edit exam data
 		const setEditExamData = () => {
-			if (props.id) {
+			if (props.id !== '') {
 				const examData = getExamDataInOldExamList(props.id)
 
 				if (!examData) {

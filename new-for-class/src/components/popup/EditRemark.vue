@@ -8,13 +8,13 @@
 				></div>
 				<div class="edit-remark__title fw-600 fz-20">編輯備註</div>
 				<input
+					v-model="remark"
 					class="edit-remark__input fz-18 c-text-main"
 					type="text"
-					v-model="remark"
 				/>
 				<div
-					@click="processSetRemarkToHistory"
 					class="edit-remark__button c-fff bgc-main cursor-pointer"
+					@click="processSetRemarkToHistory"
 				>
 					確定
 				</div>
@@ -29,11 +29,13 @@ import useHistory from '@/hooks/teacher/use-history'
 import { useHistoryStore } from '@/stores/history'
 
 export default {
+	emits: ['change-show-edit-remark'],
+
 	setup(_, context) {
 		const historyID = inject('historyID')
 
 		const closePopup = () => {
-			context.emit('changeShowEditRemark', false)
+			context.emit('change-show-edit-remark', false)
 		}
 		// store
 		const { currentHistoryData, setHistoryRemark } = useHistoryStore()

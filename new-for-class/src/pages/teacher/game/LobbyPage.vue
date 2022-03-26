@@ -5,9 +5,9 @@
 				<div class="text c-fff fw-600">請掃描QRCode進入遊戲</div>
 
 				<QRCodeVue3
-					@click="showPopup = true"
 					class="qrcode cursor-pointer"
 					:value="link"
+					@click="showPopup = true"
 				/>
 			</div>
 
@@ -29,8 +29,8 @@
 			</div>
 			<div class="player-list fz-26">
 				<div
-					:key="player.playerName"
 					v-for="player in playerList"
+					:key="player.playerName"
 					class="player"
 				>
 					{{ player.playerName }}
@@ -39,7 +39,7 @@
 		</div>
 	</div>
 
-	<div class="lobby__popup" v-if="showPopup" @click="closePopup">
+	<div v-if="showPopup" class="lobby__popup" @click="closePopup">
 		<QRCodeVue3
 			class="qrcode"
 			:value="link"

@@ -28,7 +28,7 @@
 		</table>
 	</div>
 
-	<QuestionDetail v-if="openDetail" @setOpenDetail="setOpenDetail" />
+	<QuestionDetail v-if="openDetail" @set-open-detail="setOpenDetail" />
 </template>
 
 <script>

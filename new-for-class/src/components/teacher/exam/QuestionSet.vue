@@ -6,15 +6,15 @@
 			<div class="question-input">
 				<div class="input__title fz-18 c-text-main fw-500">問題:</div>
 				<input
+					v-model="questionTitle"
 					placeholder="請輸入問題"
 					class="input__field"
 					type="text"
-					v-model="questionTitle"
 				/>
 			</div>
 
 			<div v-if="answerType === 'singleAnswer'" class="show-result-page">
-				<input type="checkbox" v-model="showResultPage" />
+				<input v-model="showResultPage" type="checkbox" />
 				<label class="text fw-600">是否顯示目前戰況?</label>
 			</div>
 		</div>
@@ -24,7 +24,7 @@
 			<div class="answer-configurations">
 				<div class="configuration configuration__type">
 					<div class="input__title">答案類型:</div>
-					<select name="answerType" v-model="answerType" class="input__field">
+					<select v-model="answerType" name="answerType" class="input__field">
 						<option value="singleAnswer">單選題</option>
 						<option value="shortAnswer">問答題</option>
 						<option value="statistics">統計題</option>
@@ -32,11 +32,11 @@
 				</div>
 				<div class="configuration configuration__time">
 					<div class="input__title">答題秒數</div>
-					<input class="input__field" type="number" v-model="limitedTime" />
+					<input v-model="limitedTime" class="input__field" type="number" />
 				</div>
 			</div>
 
-			<div class="answer-options" v-if="answerType !== 'shortAnswer'">
+			<div v-if="answerType !== 'shortAnswer'" class="answer-options">
 				<div class="input__title">
 					<span>答案選項 </span>
 					<span v-if="answerType === 'singleAnswer'">(請勾選正確答案)</span>
@@ -57,8 +57,8 @@
 									:checked="option.isAnswer"
 								/>
 								<span
-									@click="changeOptionIsAnswer(index, !option.isAnswer)"
 									class="real-checkmark cursor-pointer"
+									@click="changeOptionIsAnswer(index, !option.isAnswer)"
 								></span>
 							</template>
 							<input
@@ -84,7 +84,7 @@
 				</div>
 			</div>
 
-			<div class="short-answer" v-else>不須新增任何選項</div>
+			<div v-else class="short-answer">不須新增任何選項</div>
 		</div>
 	</div>
 </template>
@@ -98,7 +98,7 @@ export default {
 	setup() {
 		const store = useExamStore()
 		const { selectedQuestionIndex, examData } = storeToRefs(store)
-		const { setQuestionData } = useExamStore()
+		const { setQuestionData, setOptionsData } = useExamStore()
 
 		const questionTitle = computed({
 			get: () =>

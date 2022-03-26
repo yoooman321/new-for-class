@@ -3,12 +3,12 @@
 		<div class="answer-question__question-part">{{ questionTitle }}</div>
 
 		<div class="answer-question__answer-part">
-			<component :is="answerTypeComponent" :timesUp="timesUp"></component>
+			<component :is="answerTypeComponent" :times-up="timesUp"></component>
 
 			<div class="timer-and-next-button">
-				<Timer
+				<TimerComponent
 					class="timer-wrapper"
-					@processCountDownOver="processCountDownOver"
+					@process-count-down-over="processCountDownOver"
 				/>
 
 				<template v-if="timesUp">
@@ -21,9 +21,9 @@
 					</div>
 
 					<div
+						v-else
 						class="next-button fz-40 c-fff cursor-pointer"
 						@click="processShowResult"
-						v-else
 					>
 						回答狀況
 					</div>
@@ -44,14 +44,14 @@ import { storeToRefs } from 'pinia'
 import OptionsAnswer from '@/components/teacher/game/OptionsAnswer.vue'
 import WordCloudAnswer from '@/components/teacher/game/WordCloudAnswer.vue'
 import music from '@/assets/audio/bgm.mp3'
-import Timer from '@/components/teacher/game/Timer.vue'
+import TimerComponent from '@/components/teacher/game/TimerComponent.vue'
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 
 export default {
 	components: {
 		OptionsAnswer,
 		WordCloudAnswer,
-		Timer,
+		TimerComponent,
 	},
 
 	setup() {
@@ -144,7 +144,9 @@ export default {
 					setCurrentQuestionInformation()
 					await setPageToFirebase(examId, 'QuestionDisplay')
 					setPage('QuestionDisplay')
-				} catch {}
+				} catch {
+					// DO something
+				}
 
 				return
 			}
@@ -157,7 +159,9 @@ export default {
 			try {
 				await setPageToFirebase(examId, pageName)
 				setPage(pageName)
-			} catch {}
+			} catch {
+				// do something
+			}
 		}
 
 		return {

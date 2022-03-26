@@ -50,7 +50,7 @@ export default function useStudentGame() {
 		const studentUid = localStorage.getItem('studentUid')
 		const roomDoc = doc(db, 'rooms', examId, 'players', studentUid)
 		try {
-			const roomInformation = await deleteDoc(roomDoc)
+			await deleteDoc(roomDoc)
 		} catch (error) {
 			throw new Error(400)
 		}

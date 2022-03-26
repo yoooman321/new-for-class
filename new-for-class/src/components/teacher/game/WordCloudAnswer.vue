@@ -1,6 +1,6 @@
 <template>
 	<div class="word-cloud-answer">
-		<div class="word-cloud-canvas" id="word-cloud-canvas"></div>
+		<div id="word-cloud-canvas" class="word-cloud-canvas"></div>
 
 		<div class="empty-part"></div>
 	</div>
@@ -21,7 +21,7 @@ export default {
 		const { playerList } = storeToRefs(store)
 
 		// TODO: 命名要改
-		watch(playerList, (count, prevCount) => {
+		watch(playerList, (count) => {
 			const test = count.flatMap(({ playerAnswer }) => playerAnswer)
 
 			const g = test.reduce((acc, cur) => {

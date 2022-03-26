@@ -59,11 +59,11 @@
 
 			<div class="question-detail__content">
 				<!-- 選項列表 -->
-				<div class="options" v-if="currentQuestionData.options">
+				<div v-if="currentQuestionData.options" class="options">
 					<div
-						class="option"
 						v-for="(option, index) in currentQuestionData.options"
 						:key="`${currentQuestionData.questionTitle}-${index}`"
+						class="option"
 					>
 						<div class="option__text">
 							<span
@@ -80,8 +80,8 @@
 
 						<div class="option__answer-part">
 							<div
-								class="option__correct"
 								v-if="currentQuestionData.answerType === 'singleAnswer'"
+								class="option__correct"
 							>
 								<img :src="optionCorrectImage(option.isAnswer)" />
 							</div>
@@ -102,8 +102,8 @@
 						<div class="option__text">No answer</div>
 						<div class="option__answer-part">
 							<div
-								class="option__correct"
 								v-if="currentQuestionData.answerType === 'singleAnswer'"
+								class="option__correct"
 							>
 								<img src="@/assets/images/popup/icon/error.svg" />
 							</div>
@@ -145,9 +145,9 @@
 						</tr>
 
 						<tr
-							class="table__content-tr"
 							v-for="player in playerAnswerList"
 							:key="player.playerName"
+							class="table__content-tr"
 						>
 							<td class="table__content">{{ player.playerName }}</td>
 							<td class="table__content">
@@ -177,26 +177,22 @@
 </template>
 
 <script>
-import CorrectPercentage from '@/components/teacher/history/CorrectPercentage.vue'
-
 import correct from '@/assets/images/popup/icon/correct.svg'
 import wrong from '@/assets/images/popup/icon/error.svg'
 
 import { useHistoryStore } from '@/stores/history'
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
 export default {
-	components: {
-		CorrectPercentage,
-	},
+	emits: ['set-open-detail'],
 	setup(_, context) {
 		const store = useHistoryStore()
 		const { currentHistoryData, selectedQuestionIndex } = storeToRefs(store)
 		const { playerAmount, examData } = currentHistoryData.value
 		const { setSelectedQuestionIndex } = useHistoryStore()
 		const processCloseDetail = () => {
-			context.emit('setOpenDetail', false)
+			context.emit('set-open-detail', false)
 			setSelectedQuestionIndex(0)
 		}
 
@@ -245,21 +241,6 @@ export default {
 			return (playerCorrectList.length / playerAmount) * 100
 		})
 
-		const getPlayerAnswer = (index) => {
-			const playerAnswer = playerOptions.value.find(
-				({ questionIndex }) => index === questionIndex
-			)
-
-			if (!playerAnswer) {
-				return '沒有作答'
-			}
-
-			if (typeof playerAnswer.playerAnswer === 'object') {
-				return playerAnswer.playerAnswer.join()
-			}
-
-			return optionTitleList[playerAnswer.playerAnswer]
-		}
 
 		const getQuestionTypeText = () => {
 			switch (currentQuestionData.value.answerType) {
@@ -289,7 +270,6 @@ export default {
 			getAmountOfPlayerAnswerThisOption,
 			getProgressWidth,
 			setSelectedQuestionIndex,
-			getPlayerAnswer,
 			getQuestionTypeText,
 		}
 	},

@@ -2,7 +2,7 @@
 	<div class="student-word-cloud-answer">
 		<div class="input-wrapper">
 			<div class="input__title">請輸入答案(可重複輸入)</div>
-			<input type="text" class="input__field fz-18" v-model="answer" />
+			<input v-model="answer" type="text" class="input__field fz-18" />
 		</div>
 	</div>
 </template>

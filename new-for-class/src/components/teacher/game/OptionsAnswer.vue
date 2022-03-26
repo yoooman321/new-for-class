@@ -29,9 +29,8 @@
 
 <script>
 import AnsweredPlayerList from '@/components/teacher/game/AnsweredPlayerList.vue'
-import Statistics from '@/components/teacher/game/Statistics.vue'
+import Statistics from '@/components/teacher/game/StatisticsComponent.vue'
 
-import { toRef } from 'vue'
 import { useTeacherGameStore } from '@/stores/teacherGame'
 
 export default {
@@ -46,9 +45,7 @@ export default {
 		}
 	},
 
-	setup(props) {
-		const timesUp = toRef(props, 'timesUp')
-
+	setup() {
 		// store
 		const { currentQuestion } = useTeacherGameStore()
 		const { options } = currentQuestion
@@ -58,7 +55,6 @@ export default {
 		return {
 			optionTitleList,
 			options,
-			timesUp,
 		}
 	},
 }

@@ -127,6 +127,9 @@ export default {
 	components: {
 		CorrectPercentage,
 	},
+
+	emits: ['set-open-detail'],
+
 	setup(_, context) {
 		const store = useHistoryStore()
 		const { setSelectedPlayerIndex, setSelectedPlayerName } = store
@@ -148,7 +151,7 @@ export default {
 		})
 
 		const processCloseDetail = () => {
-			context.emit('setOpenDetail', false)
+			context.emit('set-open-detail', false)
 			setSelectedPlayerIndex(0)
 		}
 

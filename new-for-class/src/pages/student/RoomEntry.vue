@@ -5,7 +5,7 @@
 			<div class="room-entry__form">
 				<div class="input-wrapper">
 					<div class="input__title fz-20 c-text-main">房間編號</div>
-					<input class="input__field" name="playerName" type="number" v-model="roomId" />
+					<input v-model="roomId" class="input__field" name="playerName" type="number" />
 				</div>
 				<div class="room-entry-button bgc-main c-fff cursor-pointer" @click="enterRoom()">進入</div>
 			</div>

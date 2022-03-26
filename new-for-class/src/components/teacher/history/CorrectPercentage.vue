@@ -5,7 +5,6 @@
 			:size="100"
 			thickness="10%"
 			color-fill="#fff"
-			:color="percentageColor"
 		>
 			<span
 				slot="legend-value"
@@ -27,20 +26,19 @@ export default {
 	props: {
 		percent: {
 			type: Number,
+			default: 0,
 		},
 	},
 
 	setup(props) {
-		const { percent } = props
-
 		const percentageColor = computed(() => {
-			if (percent < 50) {
+			if (props.percent < 50) {
 				return '#E3170A'
 			}
 			return '#3f79ff'
 		})
 
-		return { percent, percentageColor }
+		return { percentageColor }
 	},
 }
 </script>

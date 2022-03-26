@@ -1,7 +1,7 @@
 <template>
 	<div
-		class="history-detail"
 		v-if="Object.keys(currentHistoryData).length !== 0"
+		class="history-detail"
 	>
 		<router-link to="/history">
 			<div class="history-detail__return">
@@ -56,15 +56,15 @@
 	<teleport to="body">
 		<edit-remark
 			v-if="showEditRemark"
-			@changeShowEditRemark="changeShowEditRemark"
+			@change-show-edit-remark="changeShowEditRemark"
 		/>
 	</teleport>
 </template>
 
 <script>
-import Summary from '@/components/teacher/history/tabs/Summary.vue'
-import Players from '@/components/teacher/history/tabs/Players.vue'
-import Questions from '@/components/teacher/history/tabs/Questions.vue'
+import Summary from '@/components/teacher/history/tabs/SummaryView.vue'
+import Players from '@/components/teacher/history/tabs/PlayersView.vue'
+import Questions from '@/components/teacher/history/tabs/QuestionsView.vue'
 import EditRemark from '@/components/popup/EditRemark.vue'
 
 import { onBeforeMount, onBeforeUnmount, ref, reactive, provide } from 'vue'
@@ -83,12 +83,12 @@ export default {
 	props: {
 		id: {
 			type: String,
+			default: '',
 		},
 	},
 
 	setup(props) {
-		const { id: historyID } = props
-		provide('historyID', historyID)
+		provide('historyID', props.id)
 		// store
 		const store = useHistoryStore()
 		const { currentHistoryData } = storeToRefs(store)
@@ -118,7 +118,7 @@ export default {
 			console.log('currentHistoryData', currentHistoryData.value)
 			if (Object.keys(currentHistoryData.value).length === 0) {
 				try {
-					const historyData = await getHistoryItemFromFirebase(historyID)
+					const historyData = await getHistoryItemFromFirebase(props.id)
 					setCurrentHistoryData(historyData)
 				} catch (e) {
 					// show error message return to history

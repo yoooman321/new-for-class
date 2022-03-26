@@ -5,11 +5,11 @@
 </template>
 
 <script>
-import Lobby from '@/pages/teacher/game/Lobby.vue'
+import Lobby from '@/pages/teacher/game/LobbyPage.vue'
 import QuestionDisplay from '@/pages/teacher/game/QuestionDisplay.vue'
 import AnswerQuestion from '@/pages/teacher/game/AnswerQuestion.vue'
-import Finish from '@/pages/teacher/game/Finish.vue'
-import Result from '@/pages/teacher/game/Result.vue'
+import Finish from '@/pages/teacher/game/FinishPage.vue'
+import Result from '@/pages/teacher/game/ResultPage.vue'
 import FinishWithRanking from '@/pages/teacher/game/FinishWithRanking.vue'
 
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
@@ -37,15 +37,15 @@ export default {
 	props: {
 		id: {
 			type: String,
+			default: '',
 		},
 	},
 
 	setup(props) {
-		const { id: examId } = props
 		let playerList = reactive([])
 		let playerListener = null
 
-		provide('examId', examId)
+		provide('examId', props.id)
 
 		// store
 		const store = useTeacherGameStore()
@@ -65,7 +65,7 @@ export default {
 		// 取得資料庫資料後存入vuex
 		const processGetRoomsInformation = async () => {
 			const { page, questionIndex, questionList, historyID, showRankingPage } =
-				await getRoomsInformation(examId)
+				await getRoomsInformation(props.id)
 
 			setPage(page)
 			setQuestionIndex(questionIndex)
@@ -85,7 +85,7 @@ export default {
 			const db = getFirestore()
 
 			const q = query(
-				collection(db, 'rooms', examId, 'players'),
+				collection(db, 'rooms', props.id, 'players'),
 				where('questionIndex', '==', questionIndex.value)
 			)
 			playerListener = onSnapshot(q, (querySnapshot) => {

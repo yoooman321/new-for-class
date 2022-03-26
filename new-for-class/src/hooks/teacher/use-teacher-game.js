@@ -80,7 +80,7 @@ export default function useTeacherGame() {
 	const deleteRoomsInformation = async (examId) => {
 		const roomDoc = doc(db, 'rooms', examId)
 		try {
-			const roomInformation = await deleteDoc(roomDoc)
+			await deleteDoc(roomDoc)
 		} catch (error) {
 			throw new Error(400)
 		}

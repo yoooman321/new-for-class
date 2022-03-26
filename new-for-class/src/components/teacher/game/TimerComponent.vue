@@ -25,6 +25,8 @@ export default {
 		VeProgress,
 	},
 
+	emits: ['process-count-down-over'],
+
 	setup(_, context) {
 		// store
 		const { currentQuestion } = useTeacherGameStore()
@@ -39,7 +41,7 @@ export default {
 		const countdown = () => {
 			if (count.value <= 1) {
 				clearInterval(timer)
-				context.emit('processCountDownOver')
+				context.emit('process-count-down-over')
 			}
 			count.value--
 			percent.value = ((limitedTime - count.value || 1) / limitedTime) * 100

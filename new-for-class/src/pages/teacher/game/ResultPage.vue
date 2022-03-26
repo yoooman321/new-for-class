@@ -9,9 +9,9 @@
 				</div>
 				<div class="player-list">
 					<div
-						class="player"
 						v-for="(player, index) in correctPlayerList"
 						:key="`${player.playerName}-${index}`"
+						class="player"
 					>
 						{{ player.playerName }}
 					</div>
@@ -24,9 +24,9 @@
 				</div>
 				<div class="player-list">
 					<div
-						class="player"
 						v-for="(player, index) in worngPlayerList"
 						:key="`${player.playerName}-${index}`"
+						class="player"
 					>
 						{{ player.playerName }}
 					</div>
@@ -54,7 +54,7 @@ export default {
 		const examId = inject('examId')
 
 		const store = useTeacherGameStore()
-		const { playerList } = storeToRefs(store)
+		const { playerList, showRankingPage } = storeToRefs(store)
 		const {
 			setQuestionIndex,
 			setCurrentQuestionInformation,
@@ -81,7 +81,9 @@ export default {
 					setCurrentQuestionInformation()
 					await setPageToFirebase(examId, 'QuestionDisplay')
 					setPage('QuestionDisplay')
-				} catch {}
+				} catch {
+					// do something
+				}
 
 				return
 			}
@@ -95,7 +97,9 @@ export default {
 			try {
 				await setPageToFirebase(examId, pageName)
 				setPage(pageName)
-			} catch {}
+			} catch {
+				// DO something
+			}
 		}
 
 		return { correctPlayerList, worngPlayerList, processNextQuestion }

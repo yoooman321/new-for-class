@@ -17,10 +17,10 @@
 			<div v-if="correctPercentage >= 0.7" class="note fw-600 fz-20">
 				太厲害了！
 			</div>
-			<div class="note fw-600 fz-20" v-else-if="correctPercentage <= 0.3">
+			<div v-else-if="correctPercentage <= 0.3" class="note fw-600 fz-20">
 				再接再厲！
 			</div>
-			<div class="note fw-600 fz-20" v-else>不錯唷！</div>
+			<div v-else class="note fw-600 fz-20">不錯唷！</div>
 		</div>
 	</div>
 </template>

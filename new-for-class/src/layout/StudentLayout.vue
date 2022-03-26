@@ -22,11 +22,11 @@
 </template>
 
 <script>
-import Lobby from '@/pages/student/game/Lobby.vue'
+import Lobby from '@/pages/student/game/LobbyPage.vue'
 import QuestionDisplay from '@/pages/student/game/QuestionDisplay.vue'
 import AnswerQuestion from '@/pages/student/game/AnswerQuestion.vue'
-import Result from '@/pages/student/game/Result.vue'
-import Finish from '@/pages/student/game/Finish.vue'
+import Result from '@/pages/student/game/ResultPage.vue'
+import Finish from '@/pages/student/game/FinishPage.vue'
 import TimesUp from '@/pages/student/game/TimesUp.vue'
 import FinishWithRanking from '@/pages/student/game/FinishWithRanking.vue'
 
@@ -53,15 +53,15 @@ export default {
 	props: {
 		id: {
 			type: String,
+			default: '',
 		},
 	},
 
 	setup(props) {
-		const { id: examId } = props
 		const page = ref('')
 		const questionIndex = ref(-1)
 
-		provide('examId', examId)
+		provide('examId', props.id)
 		provide('questionIndex', questionIndex)
 
 		// router
@@ -113,7 +113,7 @@ export default {
 		const processGetInformationWhenRefresh = async () => {
 			const uid = localStorage.getItem('studentUid')
 			if (uid) {
-				const playerInformation = await getPlayerInformation(examId)
+				const playerInformation = await getPlayerInformation(props.id)
 				console.log('playe', playerInformation)
 
 				if (!playerInformation) {
@@ -131,7 +131,7 @@ export default {
 
 		onBeforeMount(async () => {
 			switchLoadingFlag(true)
-			const hasRoomInformation = await getRoomsInformation(examId)
+			const hasRoomInformation = await getRoomsInformation(props.id)
 			if (!hasRoomInformation) {
 				router.push('/noroom')
 				switchLoadingFlag(false)
@@ -145,7 +145,7 @@ export default {
 			// 監聽事件
 			const db = getFirestore()
 			const watchRoomsInformation = onSnapshot(
-				doc(db, 'rooms', examId),
+				doc(db, 'rooms', props.id),
 				(data) => {
 					if (!data.data()) {
 						return
@@ -176,7 +176,7 @@ export default {
 
 			try {
 				await setPlayerInformationToFirebase(
-					examId,
+					props.id,
 					playerInformationToFirebase
 				)
 				setPlayerShortAnswer('')

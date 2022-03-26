@@ -8,5 +8,6 @@ module.exports = {
     'prettier'
   ],
   rules: {
+    'vue/no-deprecated-slot-attribute': 'off',
   }
 }

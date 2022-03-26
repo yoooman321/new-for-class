@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import Loading from '@/components/system/Loading.vue'
+import Loading from '@/components/system/LoadingComponent.vue'
 
 import { useSystemStore } from '@/stores/system'
 import { storeToRefs } from 'pinia'

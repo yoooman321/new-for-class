@@ -52,8 +52,8 @@
 
 					<tr>
 						<td
-							class="table__content table__content--no-student"
 							v-if="missAnsweredPlayer.length === 0"
+							class="table__content table__content--no-student"
 							colspan="2"
 						>
 							沒有漏答題的學生

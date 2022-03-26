@@ -1,5 +1,4 @@
 import { useExamStore } from '@/stores/exam'
-import { useTeacherGameStore } from '@/stores/teacherGame'
 import {
 	getFirestore,
 	doc,
@@ -15,7 +14,6 @@ import { getAuth } from 'firebase/auth'
 
 export default function useExamData() {
 	const store = useExamStore()
-	const teacherGameSotre = useTeacherGameStore()
 	const db = getFirestore()
 	const uid = localStorage.getItem('uid')
 
@@ -69,7 +67,7 @@ export default function useExamData() {
 			.then(() => {
 				return true
 			})
-			.catch((error) => {
+			.catch(() => {
 				return false
 			})
 	}

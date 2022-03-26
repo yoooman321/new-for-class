@@ -9,8 +9,6 @@ import {
 } from 'firebase/auth'
 
 export default function useAccount() {
-	const auth = getAuth()
-
 	const playerSignIn = async () => {
 		const auth = getAuth()
 		await setPersistence(auth, browserSessionPersistence)

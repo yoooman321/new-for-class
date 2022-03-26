@@ -3,7 +3,7 @@
 		<div class="show-final-ranking__header fw-800">Thank you!</div>
 		<div class="show-final-ranking__content">
 			<div class="top3">
-				<div class="two item" v-if="playerList.length >= 2">
+				<div v-if="playerList.length >= 2" class="two item">
 					<img
 						src="@/assets/images/teacher/exam/SliverCrown.png"
 						alt=""
@@ -14,7 +14,7 @@
 					<div class="score">{{ playerList[1].score }}</div>
 				</div>
 
-				<div class="one item" v-if="playerList.length >= 1">
+				<div v-if="playerList.length >= 1" class="one item">
 					<img
 						src="@/assets/images/teacher/exam/goldCrown.png"
 						alt=""
@@ -25,7 +25,7 @@
 					<div class="score">{{ playerList[0].score }}</div>
 				</div>
 
-				<div class="three item" v-if="playerList.length >= 3">
+				<div v-if="playerList.length >= 3" class="three item">
 					<img
 						src="@/assets/images/teacher/exam/bronzeCrown.png"
 						alt=""
@@ -39,9 +39,9 @@
 
 			<div class="list">
 				<div
-					class="item"
 					v-for="(player, index) in otherPlayer"
 					:key="player.playerName"
+					class="item"
 				>
 					<div class="pos">{{ index + 4 }}</div>
 					<div class="name">{{ player.playerName }}</div>

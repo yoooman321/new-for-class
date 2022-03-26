@@ -9,8 +9,8 @@
 				<div class="input-wrapper">
 					<div class="input__title fz-20">請輸入您的暱稱(最多六個字)</div>
 					<input
-						maxlength="6"
 						v-model="playerName"
+						maxlength="6"
 						class="input__field"
 						name="playerName"
 						type="text"
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { Form, Field } from 'vee-validate'
+import { Form } from 'vee-validate'
 import { ref, inject } from 'vue'
 import { useStudentGameStore } from '@/stores/studentGame'
 import useStudentGame from '@/hooks/student/use-student-game'
@@ -38,7 +38,6 @@ import useAccount from '@/hooks/use-account'
 export default {
 	components: {
 		Form,
-		Field,
 	},
 
 	setup() {

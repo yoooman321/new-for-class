@@ -30,7 +30,7 @@
 		</table>
 	</div>
 
-	<PlayerDetail v-if="openDetail" @setOpenDetail="setOpenDetail" />
+	<PlayerDetail v-if="openDetail" @set-open-detail="setOpenDetail" />
 </template>
 
 <script>
