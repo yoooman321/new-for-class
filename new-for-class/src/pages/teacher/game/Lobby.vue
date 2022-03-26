@@ -5,8 +5,9 @@
 				<div class="text c-fff fw-600">請掃描QRCode進入遊戲</div>
 
 				<QRCodeVue3
+					@click="showPopup = true"
 					class="qrcode cursor-pointer"
-					value="http://www.google.com"
+					:value="link"
 				/>
 			</div>
 
@@ -38,14 +39,14 @@
 		</div>
 	</div>
 
-	<!-- <div class="lobby__popup">
+	<div class="lobby__popup" v-if="showPopup" @click="closePopup">
 		<QRCodeVue3
 			class="qrcode"
-			value="http://www.google.com"
+			:value="link"
 			:width="pupupQrcodeSize"
 			:height="pupupQrcodeSize"
 		/>
-	</div> -->
+	</div>
 </template>
 
 <script>
@@ -53,7 +54,7 @@ import QRCodeVue3 from 'qrcode-vue3'
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 import { useTeacherGameStore } from '@/stores/teacherGame'
 import { useSystemStore } from '@/stores/system'
-import { inject } from 'vue'
+import { inject, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 export default {
@@ -62,6 +63,8 @@ export default {
 	},
 
 	setup() {
+		const link = location.href
+
 		// store
 		const store = useTeacherGameStore()
 		const { setQuestionIndex, setPage, setCurrentQuestionInformation } =
@@ -81,14 +84,9 @@ export default {
 			document.documentElement.clientHeight,
 			document.documentElement.clientWidth
 		)
-		const pupupQrcodeSize = min - 50
+		const pupupQrcodeSize = min - 200
+		const showPopup = ref(false);
 
-		/**
-		 * 1. change vuex page
-		 * 2. change firebase page
-		 * 3. vuex questionIndex++
-		 * 4. set History player Amount
-		 */
 		const progressPlayGame = async () => {
 			switchLoadingFlag(true)
 			const historyData = {
@@ -109,7 +107,11 @@ export default {
 			}
 		}
 
-		return { pupupQrcodeSize, progressPlayGame, examId, playerList }
+		const closePopup = () => {
+			showPopup.value = false
+		}
+
+		return { pupupQrcodeSize, progressPlayGame, examId, playerList, link, showPopup, closePopup }
 	},
 }
 </script>
