@@ -2,23 +2,32 @@
 	<div class="room-entry">
 		<div class="room-entry-container">
 			<div class="room-entry__title fz-30">請輸入房間編號</div>
-			<Form class="room-entry__form">
+			<div class="room-entry__form">
 				<div class="input-wrapper">
 					<div class="input__title fz-20 c-text-main">房間編號</div>
-					<Field class="input__field" name="playerName" type="text" />
+					<input class="input__field" name="playerName" type="number" v-model="roomId" />
 				</div>
-				<div class="room-entry-button bgc-main c-fff cursor-pointer">進入</div>
-			</Form>
+				<div class="room-entry-button bgc-main c-fff cursor-pointer" @click="enterRoom()">進入</div>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { Form, Field } from 'vee-validate'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
 export default {
-	components: {
-		Form,
-		Field,
+	setup() {
+		const router = useRouter()
+
+		const roomId = ref('')
+
+		const enterRoom = () => {
+			router.push(`/play/${roomId.value}`)
+		}
+
+		return { roomId, enterRoom }
 	},
 }
 </script>

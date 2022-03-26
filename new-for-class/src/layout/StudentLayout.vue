@@ -130,9 +130,12 @@ export default {
 		}
 
 		onBeforeMount(async () => {
+			switchLoadingFlag(true)
 			const hasRoomInformation = await getRoomsInformation(examId)
 			if (!hasRoomInformation) {
 				router.push('/noroom')
+				switchLoadingFlag(false)
+
 				return
 			}
 
