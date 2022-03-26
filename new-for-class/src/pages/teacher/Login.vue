@@ -31,7 +31,7 @@
 			</form>
 		</div>
 
-		<router-link to="/play/123" class="student-link">
+		<router-link to="/room" class="student-link">
 			<div>學生請點此</div>
 		</router-link>
 
