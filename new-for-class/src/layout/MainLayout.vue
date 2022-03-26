@@ -27,12 +27,12 @@
 							src="@/assets/images/teacher/icon/user.svg"
 						/>
 						<ul class="user-information__dropdown">
-							<li class="dropdown__item cursor-pointer">
+							<li class="dropdown__item cursor-pointer" @click="processSignOut">
 								<img
 									class="user-information__icon cursor-pointer"
 									src="@/assets/images/teacher/icon/logout.svg"
 								/>
-								<div class="user-information__text" @click="processSignOut">
+								<div class="user-information__text">
 									登出
 								</div>
 							</li>
@@ -79,6 +79,8 @@
 import { getAuth, signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { useSystemStore } from '@/stores/system'
+
 import AlertMessage from '@/components/popup/AlertMessage.vue'
 
 export default {
@@ -110,11 +112,14 @@ export default {
 			showSidebar.value = !showSidebar.value
 		}
 
+		const { switchLoadingFlag } = useSystemStore()
+
 		// sign out
 		const showErrorMessage = ref(false)
 		const auth = getAuth()
 
 		const processSignOut = () => {
+			switchLoadingFlag(true)
 			signOut(auth)
 				.then(() => {
 					localStorage.removeItem('uid')
@@ -125,6 +130,9 @@ export default {
 					setTimeout(() => {
 						showErrorMessage.value = false
 					}, 3000)
+				})
+				.finally(() => {
+					switchLoadingFlag(false)
 				})
 		}
 
