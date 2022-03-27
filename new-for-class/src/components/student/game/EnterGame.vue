@@ -1,6 +1,7 @@
 <template>
 	<div class="enter-game">
 		<div class="enter-game__header">
+			<img v-show="false" src="@/assets/images/student/time.png" />
 			<img src="@/assets/images/student/welcome.png" />
 		</div>
 
@@ -42,6 +43,7 @@ export default {
 
 	setup() {
 		const examId = inject('examId')
+
 
 		// hooks
 		const { setPlayerInformationToFirebase } = useStudentGame()

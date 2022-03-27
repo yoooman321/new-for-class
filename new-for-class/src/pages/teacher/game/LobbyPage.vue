@@ -47,6 +47,8 @@
 			:height="pupupQrcodeSize"
 		/>
 	</div>
+
+	<img v-show="false" src="@/assets/images/teacher/exam/bg.png" alt="" />
 </template>
 
 <script>
@@ -70,7 +72,7 @@ export default {
 		const { setQuestionIndex, setPage, setCurrentQuestionInformation } =
 			useTeacherGameStore()
 		const { playerList } = storeToRefs(store)
-		
+
 		const { switchLoadingFlag } = useSystemStore()
 
 		// hooks
@@ -85,7 +87,7 @@ export default {
 			document.documentElement.clientWidth
 		)
 		const pupupQrcodeSize = min - 200
-		const showPopup = ref(false);
+		const showPopup = ref(false)
 
 		const progressPlayGame = async () => {
 			switchLoadingFlag(true)
@@ -111,7 +113,15 @@ export default {
 			showPopup.value = false
 		}
 
-		return { pupupQrcodeSize, progressPlayGame, examId, playerList, link, showPopup, closePopup }
+		return {
+			pupupQrcodeSize,
+			progressPlayGame,
+			examId,
+			playerList,
+			link,
+			showPopup,
+			closePopup,
+		}
 	},
 }
 </script>

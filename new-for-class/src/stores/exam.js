@@ -107,6 +107,17 @@ export const useExamStore = defineStore('exam', {
 			this.examData.questionList.splice(questionIndex, 1)
 		},
 
+		deleteOption(questionIndex, optionIndex) {
+			this.examData.questionList[questionIndex].options.splice(optionIndex, 1)
+		},
+
+		addOption(questionIndex) {
+			this.examData.questionList[questionIndex].options.push({
+				optionValue: '',
+				isAnswer: false,
+			})
+		},
+
 		addQuestion() {
 			const defaultQuestionData = {
 				limitedTime: 20,
@@ -174,6 +185,6 @@ export const useExamStore = defineStore('exam', {
 
 		updateList(questionList) {
 			this.examData.questionList = questionList
-		}
+		},
 	},
 })

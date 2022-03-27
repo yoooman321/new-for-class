@@ -62,6 +62,26 @@
 			.title {
 				margin-bottom: 20px;
 			}
+
+			.add-option-button {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				height: 40px;
+				margin-top: 10px;
+
+				cursor: pointer;
+				transition: 0.3s;
+
+				border: 1px solid gray;
+				border-radius: 10px;
+
+				&:hover {
+					color: #fff;
+					background-color: #355691;
+				}
+			}
 		}
 
 		&-configurations {

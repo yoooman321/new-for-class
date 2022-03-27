@@ -67,7 +67,10 @@
 								type="text"
 								@input="changeOptionValue(index, $event.target.value)"
 							/>
-							<div class="delete-button cursor-pointer">
+							<div
+								class="delete-button cursor-pointer"
+								@click="deleteOption(selectedQuestionIndex, index)"
+							>
 								<img src="@/assets/images/teacher/icon/delete.svg" />
 							</div>
 						</div>
@@ -78,6 +81,7 @@
 							examData.questionList[selectedQuestionIndex].options.length < 4
 						"
 						class="add-option-button"
+						@click="addOption(selectedQuestionIndex)"
 					>
 						新增選項
 					</div>
@@ -98,7 +102,8 @@ export default {
 	setup() {
 		const store = useExamStore()
 		const { selectedQuestionIndex, examData } = storeToRefs(store)
-		const { setQuestionData, setOptionsData } = useExamStore()
+		const { setQuestionData, setOptionsData, deleteOption, addOption } =
+			useExamStore()
 
 		const questionTitle = computed({
 			get: () =>
@@ -159,6 +164,8 @@ export default {
 			examData,
 			changeOptionValue,
 			changeOptionIsAnswer,
+			deleteOption,
+			addOption,
 		}
 	},
 }
