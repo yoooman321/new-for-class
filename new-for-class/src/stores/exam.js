@@ -145,7 +145,6 @@ export const useExamStore = defineStore('exam', {
 
 			this.validation.examTitle.touched = true
 			this.validation.examTitle.valid = title.length > 0
-
 		},
 
 		setExamShowRankingPage(booleanData) {
@@ -328,6 +327,51 @@ export const useExamStore = defineStore('exam', {
 			}
 		},
 
+		cleanValidationData() {
+			this.validation = {
+				examTitle: {
+					touched: false,
+					valid: false,
+				},
+				questionList: [
+					{
+						limitedTime: {
+							touched: true,
+							valid: true,
+						},
+
+						questionTitle: {
+							touched: false,
+							valid: false,
+						},
+
+						options: {
+							valid: false,
+						},
+
+						optionList: [
+							{
+								touched: false,
+								valid: false,
+							},
+							{
+								touched: false,
+								valid: false,
+							},
+							{
+								touched: false,
+								valid: false,
+							},
+							{
+								touched: false,
+								valid: false,
+							},
+						],
+					},
+				],
+			}
+		},
+
 		// old Exam
 		setOldExamList(examList) {
 			this.oldExamList = examList
@@ -344,6 +388,65 @@ export const useExamStore = defineStore('exam', {
 
 		setTargetExamDataInExamData(targetExamData) {
 			this.examData = JSON.parse(JSON.stringify(targetExamData))
+		},
+
+		setValidation() {
+			this.validation = {
+				examTitle: {
+					touched: true,
+					valid: true,
+				},
+				questionList: [],
+			}
+
+			this.examData.questionList.forEach((question) => {
+				let optionList = []
+				if (!question.options) {
+					optionList = [
+						{
+							touched: true,
+							valid: true,
+						},
+						{
+							touched: true,
+							valid: true,
+						},
+						{
+							touched: true,
+							valid: true,
+						},
+						{
+							touched: true,
+							valid: true,
+						},
+					]
+				} else {
+					optionList = question.options.map(() => {
+						return {
+							touched: true,
+							valid: true,
+						}
+					})
+				}
+
+				this.validation.questionList.push({
+					limitedTime: {
+						touched: true,
+						valid: true,
+					},
+
+					questionTitle: {
+						touched: true,
+						valid: true,
+					},
+
+					options: {
+						valid: true,
+					},
+
+					optionList: optionList,
+				})
+			})
 		},
 
 		updateList(questionList) {

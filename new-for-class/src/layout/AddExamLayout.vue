@@ -78,8 +78,11 @@ export default {
 			setExamTitle,
 			setExamShowRankingPage,
 			cleanExamData,
+			cleanValidationData,
 			getExamDataInOldExamList,
 			setTargetExamDataInExamData,
+			changeSelectedQuestionIndex,
+			setValidation,
 		} = useExamStore()
 		const store = useExamStore()
 		const { examData, validation } = storeToRefs(store)
@@ -112,7 +115,9 @@ export default {
 				try {
 					switchLoadingFlag(true)
 					await saveExamDataToFirebase()
+					changeSelectedQuestionIndex(0)
 					cleanExamData()
+					cleanValidationData()
 					router.push('/old')
 					switchLoadingFlag(false)
 				} catch (e) {
@@ -159,7 +164,9 @@ export default {
 		}
 
 		const goBack = () => {
+			changeSelectedQuestionIndex(0)
 			cleanExamData()
+			cleanValidationData()
 			router.push('/')
 		}
 
@@ -173,6 +180,7 @@ export default {
 					return
 				}
 				setTargetExamDataInExamData(hadEditExamData)
+				setValidation()
 			}
 		}
 
