@@ -6,7 +6,13 @@
 					<div class="input__text c-text-main">考題名稱：</div>
 					<input
 						v-model="examTitle"
-						class="input__field fz-16 c-text-main"
+						:class="[
+							'input__field fz-16 c-text-main',
+							{
+								invalid:
+									!validation.examTitle.valid && validation.examTitle.touched,
+							},
+						]"
 						placeholder="請輸入考題名稱"
 						type="text"
 					/>
@@ -49,6 +55,7 @@ import QuestionSet from '@/components/teacher/exam/QuestionSet.vue'
 
 import { computed } from 'vue'
 import { useExamStore } from '@/stores/exam'
+import { storeToRefs } from 'pinia'
 import { useSystemStore } from '@/stores/system'
 import { useRouter } from 'vue-router'
 import useExamData from '@/hooks/teacher/use-exam'
@@ -73,11 +80,13 @@ export default {
 			cleanExamData,
 			getExamDataInOldExamList,
 			setTargetExamDataInExamData,
-			examData,
 		} = useExamStore()
+		const store = useExamStore()
+		const { examData, validation } = storeToRefs(store)
+
 		const examTitle = computed({
 			get: () => {
-				return examData.examTitle
+				return examData.value.examTitle
 			},
 			set: (value) => {
 				setExamTitle(value)
@@ -86,7 +95,7 @@ export default {
 
 		const showRankingPage = computed({
 			get: () => {
-				return examData.showRankingPage
+				return examData.value.showRankingPage
 			},
 			set: (value) => {
 				setExamShowRankingPage(value)
@@ -97,16 +106,56 @@ export default {
 		const { switchLoadingFlag } = useSystemStore()
 		const router = useRouter()
 		const processSaveExamDataToFirebase = async () => {
-			try {
-				switchLoadingFlag(true)
-				await saveExamDataToFirebase()
-				cleanExamData()
-				router.push('/old')
-				switchLoadingFlag(false)
-			} catch (e) {
-				// DO Something - show error messgae
-				switchLoadingFlag(false)
+			const isValid = checkAllFieldIsValid()
+
+			if (isValid) {
+				try {
+					switchLoadingFlag(true)
+					await saveExamDataToFirebase()
+					cleanExamData()
+					router.push('/old')
+					switchLoadingFlag(false)
+				} catch (e) {
+					// DO Something - show error messgae
+					switchLoadingFlag(false)
+				}
 			}
+		}
+
+		const checkAllFieldIsValid = () => {
+			let isValid = true
+			if (!validation.value.examTitle.valid) {
+				validation.value.examTitle.touched = true
+				isValid = false
+			}
+
+			validation.value.questionList.forEach(
+				({ limitedTime, questionTitle, options, optionList }) => {
+					if (!limitedTime.valid) {
+						limitedTime.touched = true
+						isValid = false
+					}
+
+					if (!questionTitle.valid) {
+						questionTitle.touched = true
+						isValid = false
+					}
+
+					if (!options.valid) {
+						options.touched = true
+						isValid = false
+					}
+
+					optionList.forEach((option) => {
+						if (!option.valid) {
+							option.touched = true
+							isValid = false
+						}
+					})
+				}
+			)
+
+			return isValid
 		}
 
 		const goBack = () => {
@@ -117,19 +166,25 @@ export default {
 		// edit exam data
 		const setEditExamData = () => {
 			if (props.id !== '') {
-				const examData = getExamDataInOldExamList(props.id)
+				const hadEditExamData = getExamDataInOldExamList(props.id)
 
-				if (!examData) {
+				if (!hadEditExamData) {
 					router.push('/')
 					return
 				}
-				setTargetExamDataInExamData(examData)
+				setTargetExamDataInExamData(hadEditExamData)
 			}
 		}
 
 		setEditExamData()
 
-		return { examTitle, showRankingPage, processSaveExamDataToFirebase, goBack }
+		return {
+			examTitle,
+			validation,
+			showRankingPage,
+			processSaveExamDataToFirebase,
+			goBack,
+		}
 	},
 }
 </script>

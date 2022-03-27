@@ -17,7 +17,10 @@
 
 					<div class="question-card">
 						<div class="question-card__buttons">
-							<div class="question-card__button question-card__button--error">
+							<div
+								v-if="!checkIsValid(index)"
+								class="question-card__button question-card__button--error"
+							>
 								<img src="@/assets/images/teacher/icon/error.svg" />
 							</div>
 
@@ -33,6 +36,7 @@
 							:class="[
 								'question-card-container fz-12 c-main-text',
 								{ active: selectedQuestionIndex === index },
+								{ invalid: !checkIsValid(index) },
 							]"
 						>
 							{{ element.questionTitle }}
@@ -72,7 +76,7 @@ export default {
 			deleteQuestion,
 			updateList,
 		} = useExamStore()
-		const { examData, selectedQuestionIndex } = storeToRefs(store)
+		const { examData, selectedQuestionIndex, validation } = storeToRefs(store)
 
 		const questionList = computed({
 			get: () => {
@@ -97,23 +101,42 @@ export default {
 			}
 
 			if (index === examData.value.questionList.length - 1) {
-				deleteQuestion()
-				changeSelectedQuestionIndex(examData.value.questionList.length - 1)
+				changeSelectedQuestionIndex(examData.value.questionList.length - 2)
+				deleteQuestion(index)
 
 				return
 			}
 
-			deleteQuestion()
+			deleteQuestion(index)
 		}
 
 		const changeQuestionSetIndex = ({ moved }) => {
 			changeSelectedQuestionIndex(moved.newIndex)
 		}
 
+		const checkIsValid = (index) => {
+			let isValid = true
+			Object.values(validation.value.questionList[index]).forEach((ele) => {
+				if (ele.valid === false) {
+					isValid = false
+					return
+				} else if (!ele.valid) {
+					ele.forEach(({ valid }) => {
+						if (!valid) {
+							isValid = false
+						}
+					})
+				}
+			})
+
+			return isValid
+		}
+
 		return {
 			questionList,
 			selectedQuestionIndex,
 			dragging,
+			checkIsValid,
 			changeQuestionSetIndex,
 			changeSelectedQuestionIndex,
 			processAddQuestion,

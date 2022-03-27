@@ -26,6 +26,10 @@
 			border: 1px solid map-get($color-array, 'main');
 			outline: initial;
 		}
+
+		&.invalid {
+			border: 1px solid red;
+		}
 	}
 
 	.question {

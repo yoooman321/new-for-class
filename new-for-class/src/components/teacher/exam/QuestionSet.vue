@@ -8,7 +8,16 @@
 				<input
 					v-model="questionTitle"
 					placeholder="請輸入問題"
-					class="input__field"
+					:class="[
+						'input__field',
+						{
+							invalid:
+								!validation.questionList[selectedQuestionIndex].questionTitle
+									.valid &&
+								validation.questionList[selectedQuestionIndex].questionTitle
+									.touched,
+						},
+					]"
 					type="text"
 				/>
 			</div>
@@ -32,7 +41,20 @@
 				</div>
 				<div class="configuration configuration__time">
 					<div class="input__title">答題秒數</div>
-					<input v-model="limitedTime" class="input__field" type="number" />
+					<input
+						v-model="limitedTime"
+						:class="[
+							'input__field',
+							{
+								invalid:
+									!validation.questionList[selectedQuestionIndex].limitedTime
+										.valid &&
+									validation.questionList[selectedQuestionIndex].limitedTime
+										.touched,
+							},
+						]"
+						type="number"
+					/>
 				</div>
 			</div>
 
@@ -63,7 +85,17 @@
 							</template>
 							<input
 								:value="option.optionValue"
-								class="input__field"
+								:class="[
+									'input__field',
+									{
+										invalid:
+											!validation.questionList[selectedQuestionIndex]
+												.optionList[index].valid &&
+											validation.questionList[selectedQuestionIndex].optionList[
+												index
+											].touched,
+									},
+								]"
 								type="text"
 								@input="changeOptionValue(index, $event.target.value)"
 							/>
@@ -101,7 +133,7 @@ import { computed } from 'vue'
 export default {
 	setup() {
 		const store = useExamStore()
-		const { selectedQuestionIndex, examData } = storeToRefs(store)
+		const { selectedQuestionIndex, examData, validation } = storeToRefs(store)
 		const { setQuestionData, setOptionsData, deleteOption, addOption } =
 			useExamStore()
 
@@ -162,6 +194,7 @@ export default {
 			showResultPage,
 			limitedTime,
 			examData,
+			validation,
 			changeOptionValue,
 			changeOptionIsAnswer,
 			deleteOption,

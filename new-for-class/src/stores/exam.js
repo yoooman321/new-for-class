@@ -27,12 +27,61 @@ export const useExamStore = defineStore('exam', {
 
 			selectedQuestionIndex: 0,
 			oldExamList: [],
+
+			validation: {
+				examTitle: {
+					touched: false,
+					valid: false,
+				},
+				questionList: [
+					{
+						limitedTime: {
+							touched: true,
+							valid: true,
+						},
+
+						questionTitle: {
+							touched: false,
+							valid: false,
+						},
+
+						options: {
+							valid: false,
+						},
+
+						optionList: [
+							{
+								touched: false,
+								valid: false,
+							},
+							{
+								touched: false,
+								valid: false,
+							},
+							{
+								touched: false,
+								valid: false,
+							},
+							{
+								touched: false,
+								valid: false,
+							},
+						],
+					},
+				],
+			},
 		}
 	},
 
 	actions: {
 		setQuestionData(index, propertyName, propertyValue) {
 			this.examData.questionList[index][propertyName] = propertyValue
+
+			if (propertyName !== 'answerType' && propertyName !== 'showResultPage') {
+				this.validation.questionList[index][propertyName].touched = true
+			}
+
+			this.validateQuestionData()
 
 			if (propertyName === 'answerType') {
 				const singleAnswerDefaultOptions = [
@@ -59,25 +108,44 @@ export const useExamStore = defineStore('exam', {
 					case 'shortAnswer':
 						this.setQuestionData(index, 'options', null)
 						this.setQuestionData(index, 'showResultPage', false)
+						this.validateOptions(index)
+
 						break
 
 					case 'statistics':
 						this.setQuestionData(index, 'options', statisticsDefaultOptions)
 						this.setQuestionData(index, 'showResultPage', false)
+						this.validateOptions(index)
 						break
 
 					case 'singleAnswer':
 						this.setQuestionData(index, 'options', singleAnswerDefaultOptions)
+						this.validateOptions(index)
 						break
 
 					default:
 						break
 				}
+
+				this.validateOptionListData(index)
 			}
+		},
+
+		validateQuestionData() {
+			this.examData.questionList.forEach((question, index) => {
+				this.validation.questionList[index].questionTitle.valid =
+					question.questionTitle.length !== 0
+				this.validation.questionList[index].limitedTime.valid =
+					question.limitedTime > 5
+			})
 		},
 
 		setExamTitle(title) {
 			this.examData.examTitle = title
+
+			this.validation.examTitle.touched = true
+			this.validation.examTitle.valid = title.length > 0
+
 		},
 
 		setExamShowRankingPage(booleanData) {
@@ -89,9 +157,55 @@ export const useExamStore = defineStore('exam', {
 				propertyName
 			] = propertyValue
 
+			this.validation.questionList[questionIndex].optionList[
+				optionIndex
+			].touched = true
+
 			if (propertyName === 'isAnswer' && propertyValue) {
 				this.changeCorrectAnswerInSingleAnswer(questionIndex, optionIndex)
 			}
+			this.validateOptionListData(questionIndex)
+			this.validateOptions(questionIndex)
+		},
+
+		validateOptions(questionIndex) {
+			if (
+				this.examData.questionList[questionIndex].answerType === 'singleAnswer'
+			) {
+				const hasCorrectAnswer = this.examData.questionList[
+					questionIndex
+				].options.find(({ isAnswer }) => isAnswer === true)
+
+				if (!hasCorrectAnswer) {
+					this.validation.questionList[questionIndex].options.valid = false
+					return
+				}
+			}
+
+			this.validation.questionList[questionIndex].options.valid = true
+		},
+
+		validateOptionListData(questionIndex) {
+			if (
+				this.examData.questionList[questionIndex].answerType !== 'shortAnswer'
+			) {
+				this.examData.questionList[questionIndex].options.forEach(
+					(option, index) => {
+						this.validation.questionList[questionIndex].optionList[
+							index
+						].valid = option.optionValue.length !== 0
+					}
+				)
+				return
+			}
+
+			this.validation.questionList[questionIndex].optionList.forEach(
+				(_, index) => {
+					this.validation.questionList[questionIndex].optionList[
+						index
+					].valid = true
+				}
+			)
 		},
 
 		changeCorrectAnswerInSingleAnswer(questionIndex, correctIndex) {
@@ -105,16 +219,25 @@ export const useExamStore = defineStore('exam', {
 
 		deleteQuestion(questionIndex) {
 			this.examData.questionList.splice(questionIndex, 1)
+			this.validation.questionList.splice(questionIndex, 1)
 		},
 
 		deleteOption(questionIndex, optionIndex) {
 			this.examData.questionList[questionIndex].options.splice(optionIndex, 1)
+			this.validation.questionList[questionIndex].optionList.splice(
+				optionIndex,
+				1
+			)
 		},
 
 		addOption(questionIndex) {
 			this.examData.questionList[questionIndex].options.push({
 				optionValue: '',
 				isAnswer: false,
+			})
+			this.validation.questionList[questionIndex].optionList.push({
+				touched: false,
+				valid: false,
 			})
 		},
 
@@ -134,7 +257,47 @@ export const useExamStore = defineStore('exam', {
 					{ optionValue: '', isAnswer: false },
 				],
 			}
+			this.addValidation()
 			this.examData.questionList.push(defaultQuestionData)
+		},
+
+		addValidation() {
+			const defaultValidation = {
+				limitedTime: {
+					touched: true,
+					valid: true,
+				},
+
+				questionTitle: {
+					touched: false,
+					valid: false,
+				},
+
+				options: {
+					valid: false,
+				},
+
+				optionList: [
+					{
+						touched: false,
+						valid: false,
+					},
+					{
+						touched: false,
+						valid: false,
+					},
+					{
+						touched: false,
+						valid: false,
+					},
+					{
+						touched: false,
+						valid: false,
+					},
+				],
+			}
+
+			this.validation.questionList.push(defaultValidation)
 		},
 
 		changeSelectedQuestionIndex(index) {
