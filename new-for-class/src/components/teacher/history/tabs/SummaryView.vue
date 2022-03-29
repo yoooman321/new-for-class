@@ -25,6 +25,8 @@
 				<div class="card__content">
 					<span class="value fw-600 fz-20">{{
 						currentHistoryData.playerAmount
+							? currentHistoryData.playerAmount
+							: 0
 					}}</span>
 					<span class="unit fz-14">人</span>
 				</div>
@@ -108,11 +110,13 @@ export default {
 				}
 			}
 		)
-		
+
 		totalAmountOfAnswer =
 			questionIsSingleAnswerAmount * currentHistoryData.value.playerAmount
-		correctPercent.value =
-			(playerAnsertIsCorrectAmount / totalAmountOfAnswer) * 100
+		correctPercent.value = (
+			(playerAnsertIsCorrectAmount / totalAmountOfAnswer) *
+			100
+		).toFixed(2)
 
 		const noSingleAnswerType = ref(false)
 		if (isNaN(correctPercent.value)) {

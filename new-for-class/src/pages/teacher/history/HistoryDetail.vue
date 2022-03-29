@@ -115,7 +115,6 @@ export default {
 		}
 
 		onBeforeMount(async () => {
-			console.log('currentHistoryData', currentHistoryData.value)
 			if (Object.keys(currentHistoryData.value).length === 0) {
 				try {
 					const historyData = await getHistoryItemFromFirebase(props.id)

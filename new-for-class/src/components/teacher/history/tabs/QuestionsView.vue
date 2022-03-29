@@ -65,12 +65,16 @@ export default {
 
 		// 計算答對率
 		const getCorrectPercentage = (index) => {
-			const correctList = currentHistoryData.value[`question${index}`].filter(
-				({ isCorrect }) => isCorrect
-			)
-			const percent = (correctList.length / playerAmount) * 100
+			if (currentHistoryData.value[`question${index}`]) {
+				const correctList = currentHistoryData.value[`question${index}`].filter(
+					({ isCorrect }) => isCorrect
+				)
 
-			return percent
+				const percent = (correctList.length / playerAmount) * 100
+				return percent
+			}
+
+			return 0
 		}
 
 		// openDetail

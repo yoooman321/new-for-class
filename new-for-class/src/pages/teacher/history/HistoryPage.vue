@@ -77,12 +77,15 @@ export default {
 
 		const processDeleteHistoryItem = async ({ timeStamp }, historyIndex) => {
 			// 確認要不要刪的視窗
+			switchLoadingFlag(true)
 			try {
 				await deleteHistoryItemFromFirebase(timeStamp)
 				historyList.value.splice(historyIndex, 1)
+				switchLoadingFlag(false)
 
 				// 刪除成功
 			} catch (e) {
+				switchLoadingFlag(false)
 				// do something
 			}
 		}

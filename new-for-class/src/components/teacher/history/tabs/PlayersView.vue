@@ -16,9 +16,7 @@
 			>
 				<td class="table__content">{{ playerName }}</td>
 				<td class="table__content">
-					<div v-if="questionIsSingleAnswerAmount.length === 0">
-						沒有單選題
-					</div>
+					<div v-if="questionIsSingleAnswerAmount.length === 0">沒有單選題</div>
 					<CorrectPercentage
 						v-else
 						:percent="getPlayerCorrectPercentage(playerName)"
@@ -54,21 +52,24 @@ export default {
 		const { examData } = currentHistoryData.value
 
 		const totalQuestionAmount = examData.questionList.length
-		const questionIsSingleAnswerAmount = examData.questionList.filter(({answerType}) => answerType === 'singleAnswer')
-		
+		const questionIsSingleAnswerAmount = examData.questionList.filter(
+			({ answerType }) => answerType === 'singleAnswer'
+		)
 
 		// playerList
 		const playerList = reactive({})
 		for (let index = 0; index < totalQuestionAmount; index++) {
-			currentHistoryData.value[`question${index}`].forEach((player) => {
-				if (!playerList[player.playerName]) {
-					playerList[player.playerName] = {
-						options: [player],
+			if (currentHistoryData.value[`question${index}`]) {
+				currentHistoryData.value[`question${index}`].forEach((player) => {
+					if (!playerList[player.playerName]) {
+						playerList[player.playerName] = {
+							options: [player],
+						}
+					} else {
+						playerList[player.playerName].options.push(player)
 					}
-				} else {
-					playerList[player.playerName].options.push(player)
-				}
-			})
+				})
+			}
 		}
 		setPlayerData(playerList)
 

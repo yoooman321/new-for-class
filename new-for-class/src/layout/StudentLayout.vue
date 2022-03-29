@@ -114,8 +114,6 @@ export default {
 			const uid = localStorage.getItem('studentUid')
 			if (uid) {
 				const playerInformation = await getPlayerInformation(props.id)
-				console.log('playe', playerInformation)
-
 				if (!playerInformation) {
 					deleteStudentUidFromStorage()
 					return
@@ -191,8 +189,6 @@ export default {
 		}
 
 		const getPlayerData = (answerType) => {
-			console.log('answerType', answerType)
-
 			switch (answerType) {
 				case 'singleAnswer':
 					return getPlayerDataBySingleAnswer()
@@ -209,13 +205,8 @@ export default {
 			const isCorrect = checkAnswerIsCorrect(questionIndex.value)
 			let playerScore = playerInformation.value.score
 			if (isCorrect) {
-				console.log(
-					'playerInformation.value.score',
-					playerInformation.value.score
-				)
 				playerScore += 1
 			}
-			console.log('ddd', playerInformation.value.score)
 			const playerInformationToFirebase = {
 				playerName: playerInformation.value.playerName,
 				isCorrect,

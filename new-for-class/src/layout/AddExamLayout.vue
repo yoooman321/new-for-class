@@ -47,23 +47,59 @@
 			</div>
 		</div>
 	</div>
+
+	<teleport to="body">
+		<SystemMessage v-if="showSystemMessage" :messageType="'fail'">
+			<template v-slot:content>
+				<div class="fw-600">
+					{{ systemMessageText }}
+				</div>
+			</template>
+		</SystemMessage>
+	</teleport>
+
+	<!-- <teleport to="body">
+		<ConfirmDialog>
+			<template v-slot:content>
+				<div class="fw-600">
+					你確定要離開嗎?
+				</div>
+			</template>
+
+			<template v-slot:button>
+				<div class="confirm-button confirm-button--exit fw-600">
+					確定離開
+				</div>
+
+				<div class="confirm-button confirm-button--stay fw-600">
+					留在原地
+				</div>
+			</template>
+		</ConfirmDialog>
+	</teleport> -->
 </template>
 
 <script>
 import QuestionListView from '@/components/teacher/exam/QuestionListView.vue'
 import QuestionSet from '@/components/teacher/exam/QuestionSet.vue'
+import SystemMessage from '@/components/system/SystemMessage.vue'
+// import ConfirmDialog from '@/components/system/ConfirmDialog.vue'
 
 import { computed } from 'vue'
 import { useExamStore } from '@/stores/exam'
 import { storeToRefs } from 'pinia'
 import { useSystemStore } from '@/stores/system'
 import { useRouter } from 'vue-router'
+
 import useExamData from '@/hooks/teacher/use-exam'
+import useSystem from '@/hooks/use-system'
 
 export default {
 	components: {
 		QuestionListView,
 		QuestionSet,
+		SystemMessage,
+		// ConfirmDialog,
 	},
 
 	props: {
@@ -105,7 +141,10 @@ export default {
 			},
 		})
 
+		const systemMessageText = '新增失敗'
+
 		const { saveExamDataToFirebase } = useExamData()
+		const { showSystemMessage, switchSystemMessage } = useSystem()
 		const { switchLoadingFlag } = useSystemStore()
 		const router = useRouter()
 		const processSaveExamDataToFirebase = async () => {
@@ -123,6 +162,7 @@ export default {
 				} catch (e) {
 					// DO Something - show error messgae
 					switchLoadingFlag(false)
+					switchSystemMessage()
 				}
 			}
 		}
@@ -190,6 +230,8 @@ export default {
 			examTitle,
 			validation,
 			showRankingPage,
+			systemMessageText,
+			showSystemMessage,
 			processSaveExamDataToFirebase,
 			goBack,
 		}

@@ -65,7 +65,6 @@ export default {
 	},
 
 	setup() {
-		const link = location.href
 
 		// store
 		const store = useTeacherGameStore()
@@ -80,6 +79,8 @@ export default {
 
 		// inject examId
 		const examId = inject('examId')
+
+		const link = location.origin + '/play/' + examId
 
 		// get QRCode Size
 		const min = Math.min(

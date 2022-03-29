@@ -34,6 +34,7 @@
 import { Form } from 'vee-validate'
 import { ref, inject } from 'vue'
 import { useStudentGameStore } from '@/stores/studentGame'
+import { useSystemStore } from '@/stores/system'
 import useStudentGame from '@/hooks/student/use-student-game'
 import useAccount from '@/hooks/use-account'
 export default {
@@ -47,10 +48,12 @@ export default {
 
 		// hooks
 		const { setPlayerInformationToFirebase } = useStudentGame()
+		const { switchLoadingFlag } = useSystemStore()
 		const { playerSignIn } = useAccount()
 
 		const processSignUpForGame = async () => {
 			try {
+				switchLoadingFlag(true)
 				// save player Informaiton
 				const uid = await playerSignIn()
 				localStorage.setItem('studentUid', uid)
@@ -68,7 +71,9 @@ export default {
 				}
 				setPlayerInformationToFirebase(examId, playerInformation)
 				setPlayerInformation(playerInformation)
+				switchLoadingFlag(false)
 			} catch (e) {
+				switchLoadingFlag(false)
 				// try again
 			}
 		}

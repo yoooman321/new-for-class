@@ -65,18 +65,23 @@ export default {
 
 <style lang="scss">
 .student-options-answer {
-	display: grid;
+	display: flex;
+	flex-wrap: wrap;
 
 	height: 100%;
+	width: 100%;
+	flex-grow: 1;
 
-	grid-template-columns: repeat(1, 1fr 1fr);
 
 	.option {
 		border: 1px solid #fff;
+		width: 50%;
+		height: 50%;
+		box-sizing: border-box;
 
 		&--active {
-			opacity: 0.7;
-			border: 1px outset #805b0c;
+			opacity: 0.6;
+			border: 3px outset #805b0c;
 		}
 	}
 }

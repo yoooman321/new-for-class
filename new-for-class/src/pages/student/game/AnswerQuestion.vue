@@ -23,25 +23,29 @@ export default {
 		const { questionList } = storeToRefs(store)
 		const answerType = questionList.value[questionIndex.value].answerType
 		const answerTypeComponent = ref('')
-		switch(answerType) {
+		switch (answerType) {
 			case 'singleAnswer':
 			case 'statistics':
 				answerTypeComponent.value = 'OptionsAnswer'
-				break;
+				break
 			case 'shortAnswer':
 				answerTypeComponent.value = 'WordCloudAnswer'
-				break;
+				break
 			default:
-				break;
+				break
 		}
 
-		return {answerTypeComponent}
-	}
+		return { answerTypeComponent }
+	},
 }
 </script>
 
 <style lang="scss">
 .student-answer-question {
-	height: 100%;
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+
+	width: 100%;
 }
 </style>

@@ -49,18 +49,34 @@
 			</tr>
 		</table>
 	</div>
+
+	<teleport to="body">
+		<SystemMessage v-if="showSystemMessage" :messageType="messageType">
+			<template v-slot:content>
+				<div class="fw-600">
+					{{ systemMessageText }}
+				</div>
+			</template>
+		</SystemMessage>
+	</teleport>
 </template>
 
 <script>
 import useExamData from '@/hooks/teacher/use-exam'
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
+import useSystem from '@/hooks/use-system'
 import { useExamStore } from '@/stores/exam'
 import { useSystemStore } from '@/stores/system'
 import { onBeforeMount } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 
+import SystemMessage from '@/components/system/SystemMessage.vue'
+
 export default {
+	components: {
+		SystemMessage,
+	},
 	setup() {
 		// store
 		const store = useExamStore()
@@ -81,6 +97,13 @@ export default {
 			addHistoryToFirebase,
 			deleteOldPlayers,
 		} = useTeacherGame()
+
+		const {
+			showSystemMessage,
+			systemMessageText,
+			messageType,
+			switchSystemMessage,
+		} = useSystem()
 
 		// router
 		const router = useRouter()
@@ -106,8 +129,15 @@ export default {
 				// Do something - 刪除成功，重新拿list
 				processGetExamListFromFirebase()
 				switchLoadingFlag(false)
+
+				messageType.value = 'success'
+				systemMessageText.value = '刪除成功'
+				switchSystemMessage()
 			} catch {
 				switchLoadingFlag(false)
+				messageType.value = 'fail'
+				systemMessageText.value = '刪除失敗'
+				switchSystemMessage()
 				// Do something - error message
 			}
 		}
@@ -142,8 +172,6 @@ export default {
 				// error message try again
 			} catch (e) {
 				switchLoadingFlag(false)
-				console.log('oooooo')
-
 				// do something
 			}
 		}
@@ -154,6 +182,10 @@ export default {
 				switchLoadingFlag(true)
 				await deleteTeacherRooms()
 				switchLoadingFlag(false)
+
+				messageType.value = 'success'
+				systemMessageText.value = '刪除成功'
+				switchSystemMessage()
 			} catch (error) {
 				switchLoadingFlag(false)
 			}
@@ -165,6 +197,9 @@ export default {
 
 		return {
 			oldExamList,
+			showSystemMessage,
+			systemMessageText,
+			messageType,
 			goToEditPage,
 			processDeleteExamFromFirebase,
 			processStartExamGame,

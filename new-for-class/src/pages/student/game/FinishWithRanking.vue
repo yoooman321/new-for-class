@@ -7,6 +7,8 @@ import ShowCalculating from '@/components/student/game/ShowCalculating.vue'
 import ShowRanking from '@/components/student/game/ShowRanking.vue'
 
 import { ref } from 'vue'
+import useAccount from '@/hooks/use-account'
+import useStudentGame from '@/hooks/student/use-student-game'
 
 export default {
 	components: {
@@ -16,7 +18,7 @@ export default {
 
 	setup() {
 		const showComponentName = ref('ShowCalculating')
-
+		
 		setTimeout(() => {
 			showComponentName.value = 'ShowRanking'
 		}, 14000)

@@ -159,7 +159,7 @@ export default {
 			const playerAnswerCorrectList = playerOptions.value.filter(
 				({ isCorrect }) => isCorrect
 			)
-			return (playerAnswerCorrectList.length / totalQuestionAmount) * 100
+			return ((playerAnswerCorrectList.length / totalQuestionAmount) * 100).toFixed(2)
 		}
 
 		const getAnswerTypeText = (answerType) => {

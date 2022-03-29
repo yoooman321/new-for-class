@@ -225,7 +225,11 @@ export default {
 
 		// playerAnswerList
 		const playerAnswerList = computed(() => {
-			return currentHistoryData.value[`question${selectedQuestionIndex.value}`]
+			if (currentHistoryData.value[`question${selectedQuestionIndex.value}`]) {
+				return currentHistoryData.value[`question${selectedQuestionIndex.value}`]
+			}
+
+			return []
 		})
 
 		const amountOfPlayerNoAnswer = computed(() => {

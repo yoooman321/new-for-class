@@ -28,16 +28,54 @@
 <script>
 import { storeToRefs } from 'pinia'
 import { useStudentGameStore } from '@/stores/studentGame'
+import { onBeforeUnmount, inject } from 'vue'
+import useAccount from '@/hooks/use-account'
+import useStudentGame from '@/hooks/student/use-student-game'
 
 export default {
 	setup() {
+		const examId = inject('examId')
 		const store = useStudentGameStore()
 		const { questionList, playerInformation } = storeToRefs(store)
 		const playerScore = playerInformation.value.score
 
-    const quesitonIsSingleAnswer = questionList.value.filter(({answerType}) => answerType === 'singleAnswer')
+		const quesitonIsSingleAnswer = questionList.value.filter(
+			({ answerType }) => answerType === 'singleAnswer'
+		)
 		const correctPercentage = playerScore / quesitonIsSingleAnswer.length
 
+		const { deletePlayerAuth } = useAccount()
+		const { deletePlayerInformation } = useStudentGame()
+
+		setTimeout(async () => {
+			try {
+				await deletePlayerInformation(examId)
+			} catch (e) {
+				console.log('b', e)
+			}
+
+			try {
+				await deletePlayerAuth()
+			} catch (e) {
+				console.log('a', e)
+			}
+			localStorage.removeItem('studentUid')
+		}, 3000)
+
+		onBeforeUnmount(async () => {
+			try {
+				await deletePlayerInformation(examId)
+			} catch (e) {
+				console.log('b', e)
+			}
+
+			try {
+				await deletePlayerAuth()
+			} catch (e) {
+				console.log('a', e)
+			}
+			localStorage.removeItem('studentUid')
+		})
 
 		return { playerScore, quesitonIsSingleAnswer, correctPercentage }
 	},
