@@ -1,10 +1,33 @@
 .teacher-layout {
+  position: relative;
   @include desktop {
     font-size: 40px;
   }
 
   @include bigscreen {
     font-size: 60px;
+  }
+
+  .fullscreen {
+    background-color: #fff;
+  }
+
+  .full-screen-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: #fff;
+    border-radius: 50%;
+    height: 24px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    img {
+      height: 20px;
+    }
   }
   
  

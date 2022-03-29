@@ -113,10 +113,10 @@ export default {
 
 		totalAmountOfAnswer =
 			questionIsSingleAnswerAmount * currentHistoryData.value.playerAmount
-		correctPercent.value = (
+		correctPercent.value = Math.floor(Number(
 			(playerAnsertIsCorrectAmount / totalAmountOfAnswer) *
 			100
-		).toFixed(2)
+		))
 
 		const noSingleAnswerType = ref(false)
 		if (isNaN(correctPercent.value)) {

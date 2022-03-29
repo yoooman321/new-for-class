@@ -1,6 +1,21 @@
 <template>
 	<div class="teacher-layout">
-		<component :is="teacherPage"></component>
+		<fullscreen
+			v-model:fullscreen="fullscreen"
+			:teleport="teleport"
+			:page-only="pageOnly"
+		>
+			<component :is="teacherPage"></component>
+
+			<div class="full-screen-button" @click="toggle">
+				<img
+					v-if="!fullscreen"
+					src="@/assets/images/teacher/icon/fullscreen.svg"
+				/>
+
+				<img v-else src="@/assets/images/teacher/icon/close_fullscreen.svg" />
+			</div>
+		</fullscreen>
 	</div>
 </template>
 
@@ -11,11 +26,12 @@ import AnswerQuestion from '@/pages/teacher/game/AnswerQuestion.vue'
 import Finish from '@/pages/teacher/game/FinishPage.vue'
 import Result from '@/pages/teacher/game/ResultPage.vue'
 import FinishWithRanking from '@/pages/teacher/game/FinishWithRanking.vue'
+import { component } from 'vue-fullscreen'
 
 import useTeacherGame from '@/hooks/teacher/use-teacher-game'
 import { useTeacherGameStore } from '@/stores/teacherGame'
 import { storeToRefs } from 'pinia'
-import { onBeforeMount, provide, reactive, watch } from 'vue'
+import { onBeforeMount, provide, reactive, watch, toRefs } from 'vue'
 import {
 	getFirestore,
 	collection,
@@ -32,6 +48,7 @@ export default {
 		Finish,
 		Result,
 		FinishWithRanking,
+		fullscreen: component,
 	},
 
 	props: {
@@ -44,6 +61,16 @@ export default {
 	setup(props) {
 		let playerList = reactive([])
 		let playerListener = null
+
+		const state = reactive({
+			fullscreen: false,
+			teleport: false,
+			pageOnly: false,
+		})
+
+		function toggle() {
+			state.fullscreen = !state.fullscreen
+		}
 
 		provide('examId', props.id)
 
@@ -110,7 +137,7 @@ export default {
 			addListenerObject()
 		})
 
-		return { teacherPage: page }
+		return { teacherPage: page, toggle, ...toRefs(state) }
 	},
 }
 </script>
